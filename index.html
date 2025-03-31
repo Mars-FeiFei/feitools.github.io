@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>方块跑酷</title>
     <style>
         body {
@@ -328,9 +328,13 @@
             
             // 按钮事件
             document.getElementById('startButton').addEventListener('click', startGame);
+            document.getElementById('startButton').addEventListener('touchstart', startGame);
             document.getElementById('skipButton').addEventListener('click', startGame);
+            document.getElementById('skipButton').addEventListener('touchstart', startGame);
             document.getElementById('restartButton').addEventListener('click', restartGame);
+            document.getElementById('restartButton').addEventListener('touchstart', restartGame);
             document.getElementById('nextLevelButton').addEventListener('click', nextLevel);
+            document.getElementById('nextLevelButton').addEventListener('touchstart', restartGame);
             
             // 加载第一关
             loadLevel(currentLevel);
