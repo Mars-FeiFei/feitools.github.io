@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SiliconFlow AI对话</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        #chat-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            height: 500px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+        .message {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 18px;
+            max-width: 70%;
+            word-wrap: break-word;
+        }
+        .user-message {
+            background-color: #e3f2fd;
+            margin-left: auto;
+            border-bottom-right-radius: 5px;
+        }
+        .ai-message {
+            background-color: #f1f1f1;
+            margin-right: auto;
+            border-bottom-left-radius: 5px;
+        }
+        #input-container {
+            display: flex;
+            gap: 10px;
+        }
+        #user-input {
+            flex-grow: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 16px;
+        }
+        #send-button {
+            padding: 12px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        #send-button:hover {
+            background-color: #45a049;
+        }
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0,0,0,.3);
+            border-radius: 50%;
+            border-top-color: #000;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <h1>SiliconFlow AI对话</h1>
+    <div id="chat-container"></div>
+    <div id="input-container">
+        <input type="text" id="user-input" placeholder="输入你的消息..." autocomplete="off">
+        <button id="send-button">发送</button>
+    </div>
+
+    <script>
+        // 获取DOM元素
+        const chatContainer = document.getElementById('chat-container');
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+        
+        // 添加消息到聊天界面
+        function addMessage(role, content) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', `${role}-message`);
+            messageDiv.textContent = content;
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+        
+        // 显示加载动画
+        function showLoading() {
+            const loadingDiv = document.createElement('div');
+            loadingDiv.classList.add('message', 'ai-message');
+            loadingDiv.innerHTML = '<div class="loading"></div>';
+            chatContainer.appendChild(loadingDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+            return loadingDiv;
+        }
+        
+        // 移除加载动画
+        function removeLoading(loadingDiv) {
+            chatContainer.removeChild(loadingDiv);
+        }
+        
+        // 调用SiliconFlow API
+        async function callSiliconFlowAPI(message) {
+            const apiUrl = 'https://api.siliconflow.cn/v1/chat/completions';
+            const apiKey = 'sk-ogdfxamkjtwexpokgdhbvxzgjneyedsxvfhb';
+            
+            try {
+                const loading = showLoading();
+                
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: "deepseek-chat", // 或其他支持的模型
+                        messages: [
+                            {
+                                role: "user",
+                                content: message
+                            }
+                        ],
+                        temperature: 0.7,
+                        max_tokens: 1000
+                    })
+                });
+                
+                removeLoading(loading);
+                
+                if (!response.ok) {
+                    throw new Error(`API请求失败: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                return data.choices[0].message.content;
+            } catch (error) {
+                console.error('调用API出错:', error);
+                return "抱歉，我暂时无法处理你的请求。错误: " + error.message;
+            }
+        }
+        
+        // 处理用户发送消息
+        async function handleSendMessage() {
+            const message = userInput.value.trim();
+            if (!message) return;
+            
+            addMessage('user', message);
+            userInput.value = '';
+            
+            // 调用AI API获取回复
+            const aiResponse = await callSiliconFlowAPI(message);
+            addMessage('ai', aiResponse);
+        }
+        
+        // 事件监听
+        sendButton.addEventListener('click', handleSendMessage);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleSendMessage();
+            }
+        });
+        
+        // 初始欢迎消息
+        addMessage('ai', '你好！我是基于SiliconFlow API的AI助手，有什么可以帮你的吗？');
+    </script>
+</body>
+</html>

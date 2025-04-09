@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI计算器</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #34495e;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .bmi-value {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .bmi-category {
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        
+        .diet-advice {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        
+        .diet-advice h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        
+        .underweight {
+            background-color: #f39c12;
+            color: white;
+        }
+        
+        .normal {
+            background-color: #2ecc71;
+            color: white;
+        }
+        
+        .overweight {
+            background-color: #e67e22;
+            color: white;
+        }
+        
+        .obese {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .info {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #7f8c8d;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>BMI计算器</h1>
+        
+        <div class="input-group">
+            <label for="height">身高 (cm)</label>
+            <input type="number" id="height" placeholder="请输入您的身高">
+        </div>
+        
+        <div class="input-group">
+            <label for="weight">体重 (kg)</label>
+            <input type="number" id="weight" placeholder="请输入您的体重">
+        </div>
+        
+        <button onclick="calculateBMI()">计算BMI</button>
+        
+        <div id="result" class="result">
+            <div id="bmi-value" class="bmi-value"></div>
+            <div id="bmi-category" class="bmi-category"></div>
+            
+            <div class="diet-advice">
+                <h3>饮食建议</h3>
+                <div id="diet-tips"></div>
+            </div>
+        </div>
+        
+        <div class="info">
+            BMI = 体重(kg) / (身高(m) × 身高(m))
+        </div>
+    </div>
+
+    <script>
+        function calculateBMI() {
+            // 获取输入值
+            const height = parseFloat(document.getElementById('height').value);
+            const weight = parseFloat(document.getElementById('weight').value);
+            
+            // 验证输入
+            if (isNaN(height) || isNaN(weight) || height <= 0 || weight <= 0) {
+                alert('请输入有效的身高和体重值');
+                return;
+            }
+            
+            // 计算BMI
+            const heightInMeters = height / 100;
+            const bmi = weight / (heightInMeters * heightInMeters);
+            const roundedBMI = bmi.toFixed(1);
+            
+            // 显示结果
+            document.getElementById('bmi-value').textContent = `您的BMI: ${roundedBMI}`;
+            
+            // 确定BMI类别和饮食建议
+            let category = '';
+            let dietTips = '';
+            
+            if (bmi < 18.5) {
+                category = '体重过轻';
+                dietTips = `
+                    <p>您的体重低于正常范围，建议：</p>
+                    <ul>
+                        <li>增加高热量、高营养的食物摄入，如坚果、鳄梨、全脂乳制品</li>
+                        <li>多吃富含蛋白质的食物：鸡蛋、鱼、瘦肉、豆类</li>
+                        <li>适量增加健康碳水化合物：全谷物、土豆、糙米</li>
+                        <li>可以考虑少量多餐，增加进食频率</li>
+                        <li>在医生指导下进行适度的力量训练以增加肌肉量</li>
+                    </ul>
+                `;
+                document.getElementById('bmi-category').className = 'bmi-category underweight';
+            } else if (bmi >= 18.5 && bmi < 24) {
+                category = '正常体重';
+                dietTips = `
+                    <p>您的体重在健康范围内，建议保持：</p>
+                    <ul>
+                        <li>均衡饮食：蔬菜、水果、全谷物、优质蛋白质和健康脂肪</li>
+                        <li>控制精制糖和加工食品的摄入</li>
+                        <li>保持适量运动，每周至少150分钟中等强度运动</li>
+                        <li>注意饮食多样化，确保各种营养素的摄入</li>
+                        <li>保持规律的饮食习惯，避免暴饮暴食</li>
+                    </ul>
+                `;
+                document.getElementById('bmi-category').className = 'bmi-category normal';
+            } else if (bmi >= 24 && bmi < 28) {
+                category = '超重';
+                dietTips = `
+                    <p>您的体重略高于正常范围，建议：</p>
+                    <ul>
+                        <li>减少高热量、高脂肪和高糖食物的摄入</li>
+                        <li>增加蔬菜和水果的比例，它们热量低且富含纤维</li>
+                        <li>选择全谷物而不是精制谷物</li>
+                        <li>控制饮食量，使用小盘子帮助控制份量</li>
+                        <li>增加日常活动量，每周至少150-300分钟中等强度运动</li>
+                        <li>减少含糖饮料，多喝水或无糖茶</li>
+                    </ul>
+                `;
+                document.getElementById('bmi-category').className = 'bmi-category overweight';
+            } else {
+                category = '肥胖';
+                dietTips = `
+                    <p>您的体重明显高于正常范围，建议：</p>
+                    <ul>
+                        <li>咨询医生或营养师制定个性化的减重计划</li>
+                        <li>大幅减少高热量、高脂肪和高糖食物的摄入</li>
+                        <li>增加非淀粉类蔬菜的摄入量</li>
+                        <li>选择瘦肉蛋白来源，如鱼、鸡胸肉、豆制品</li>
+                        <li>完全避免含糖饮料和果汁</li>
+                        <li>逐渐增加运动量，从低强度开始并逐渐增加</li>
+                        <li>记录饮食日记，提高对饮食的认识</li>
+                        <li>考虑行为疗法，改变不健康的饮食习惯</li>
+                    </ul>
+                `;
+                document.getElementById('bmi-category').className = 'bmi-category obese';
+            }
+            
+            document.getElementById('bmi-category').textContent = category;
+            document.getElementById('diet-tips').innerHTML = dietTips;
+            
+            // 显示结果区域
+            document.getElementById('result').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

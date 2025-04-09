@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>方块跑酷</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            touch-action: none;
+        }
+        
+        #gameContainer {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background-color: #333;
+        }
+        
+        #gameCanvas {
+            display: block;
+            background-color: #87CEEB;
+        }
+        
+        #uiOverlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        #levelDisplay {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: white;
+            font-size: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        
+        #scoreDisplay {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: white;
+            font-size: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: auto;
+        }
+        
+        #joystickArea {
+            width: 150px;
+            height: 150px;
+            margin-left: 30px;
+            position: relative;
+        }
+        
+        #joystickBase {
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+            position: relative;
+        }
+        
+        #joystick {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            position: absolute;
+            top: 45px;
+            left: 45px;
+            touch-action: none;
+        }
+        
+        #jumpButton {
+            width: 100px;
+            height: 100px;
+            margin-right: 30px;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 18px;
+            user-select: none;
+        }
+        
+        #startScreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            z-index: 100;
+        }
+        
+        #startButton {
+            margin-top: 30px;
+            padding: 15px 30px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        #skipButton {
+            margin-top: 30px;
+            padding: 15px 30px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        #instructions {
+            max-width: 80%;
+            text-align: center;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        #gameOverScreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            z-index: 100;
+        }
+        
+        #restartButton {
+            margin-top: 30px;
+            padding: 15px 30px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        #levelCompleteScreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            z-index: 100;
+        }
+        
+        #nextLevelButton {
+            margin-top: 30px;
+            padding: 15px 30px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <canvas id="gameCanvas"></canvas>
+        
+        <div id="uiOverlay">
+            <div id="levelDisplay">关卡: 1</div>
+            <div id="scoreDisplay">分数: 0</div>
+            
+            <div id="controls">
+                <div id="joystickArea">
+                    <div id="joystickBase">
+                        <div id="joystick"></div>
+                    </div>
+                </div>
+                <div id="jumpButton">跳跃</div>
+            </div>
+        </div>
+        
+        <div id="startScreen">
+            <h1>方块跑酷</h1>
+            <div id="instructions">
+                <p>控制方块通过15个充满挑战的关卡！</p>
+                <p><strong>操作方式：</strong></p>
+                <p>· 使用屏幕左侧的摇杆或键盘WASD键移动方块</p>
+                <p>· 点击右侧跳跃按钮或按空格键跳跃</p>
+                <p>· 收集金币可以获得额外分数</p>
+                <p>· 避开红色障碍物和陷阱</p>
+                <p>· 到达绿色终点旗即可通关</p>
+                <p>祝你好运！</p>
+            </div>
+            <div style="display: flex; gap: 20px;">
+                <button id="startButton">开始游戏</button>
+                <button id="skipButton">跳过介绍</button>
+            </div>
+        </div>
+        
+        <div id="gameOverScreen">
+            <h1>游戏结束</h1>
+            <p id="finalScore">你的分数: 0</p>
+            <button id="restartButton">重新开始</button>
+        </div>
+        
+        <div id="levelCompleteScreen">
+            <h1>关卡完成！</h1>
+            <p id="levelScore">本关分数: 0</p>
+            <button id="nextLevelButton">下一关</button>
+        </div>
+    </div>
+
+    <script>
+        // 游戏常量
+        const PLAYER_SIZE = 30;
+        const GRAVITY = 0.5;
+        const JUMP_FORCE = -12;
+        const MOVE_SPEED = 5;
+        const COIN_SIZE = 20;
+        const FLAG_SIZE = 40;
+        
+        // 游戏变量
+        let canvas, ctx;
+        let player = {
+            x: 50,
+            y: 300,
+            width: PLAYER_SIZE,
+            height: PLAYER_SIZE,
+            velX: 0,
+            velY: 0,
+            isJumping: false,
+            color: '#3498db'
+        };
+        
+        let platforms = [];
+        let coins = [];
+        let hazards = [];
+        let flag = null;
+        let currentLevel = 1;
+        let score = 0;
+        let gameRunning = false;
+        let joystickActive = false;
+        let joystickX = 0;
+        let joystickY = 0;
+        
+        // 键盘控制
+        let keys = {};
+        
+        // 初始化游戏
+        function initGame() {
+            canvas = document.getElementById('gameCanvas');
+            ctx = canvas.getContext('2d');
+            
+            // 设置画布大小为窗口大小
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            
+            // 初始化摇杆控制
+            initJoystick();
+            
+            // 初始化跳跃按钮
+            const jumpButton = document.getElementById('jumpButton');
+            jumpButton.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                handleJump();
+            });
+            
+            jumpButton.addEventListener('mousedown', function(e) {
+                e.preventDefault();
+                handleJump();
+            });
+            
+            // 键盘事件监听
+            document.addEventListener('keydown', function(e) {
+                keys[e.key.toLowerCase()] = true;
+                
+                if (e.key === ' ') {
+                    e.preventDefault();
+                    handleJump();
+                }
+            });
+            
+            document.addEventListener('keyup', function(e) {
+                keys[e.key.toLowerCase()] = false;
+            });
+            
+            // 按钮事件
+            document.getElementById('startButton').addEventListener('click', startGame);
+            document.getElementById('startButton').addEventListener('touchstart', startGame);
+            document.getElementById('skipButton').addEventListener('click', startGame);
+            document.getElementById('skipButton').addEventListener('touchstart', startGame);
+            document.getElementById('restartButton').addEventListener('click', restartGame);
+            document.getElementById('restartButton').addEventListener('touchstart', restartGame);
+            document.getElementById('nextLevelButton').addEventListener('click', nextLevel);
+            document.getElementById('nextLevelButton').addEventListener('touchstart', restartGame);
+            
+            // 加载第一关
+            loadLevel(currentLevel);
+            
+            // 开始游戏循环
+            requestAnimationFrame(gameLoop);
+        }
+        
+        // 调整画布大小
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        
+        // 初始化摇杆
+        function initJoystick() {
+            const joystick = document.getElementById('joystick');
+            const joystickArea = document.getElementById('joystickArea');
+            const baseRect = joystickArea.getBoundingClientRect();
+            const baseCenterX = baseRect.left + baseRect.width / 2;
+            const baseCenterY = baseRect.top + baseRect.height / 2;
+            const maxDistance = 50;
+            
+            let touchId = null;
+            
+            joystick.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                if (touchId === null) {
+                    touchId = e.changedTouches[0].identifier;
+                    joystickActive = true;
+                }
+            });
+            
+            document.addEventListener('touchmove', function(e) {
+                e.preventDefault();
+                if (!joystickActive) return;
+                
+                for (let i = 0; i < e.changedTouches.length; i++) {
+                    if (e.changedTouches[i].identifier === touchId) {
+                        const touch = e.changedTouches[i];
+                        const deltaX = touch.clientX - baseCenterX;
+                        const deltaY = touch.clientY - baseCenterY;
+                        const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+                        
+                        if (distance > maxDistance) {
+                            const angle = Math.atan2(deltaY, deltaX);
+                            joystickX = Math.cos(angle) * maxDistance;
+                            joystickY = Math.sin(angle) * maxDistance;
+                        } else {
+                            joystickX = deltaX;
+                            joystickY = deltaY;
+                        }
+                        
+                        joystick.style.transform = `translate(${joystickX}px, ${joystickY}px)`;
+                        return;
+                    }
+                }
+            });
+            
+            document.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                for (let i = 0; i < e.changedTouches.length; i++) {
+                    if (e.changedTouches[i].identifier === touchId) {
+                        resetJoystick();
+                        touchId = null;
+                        return;
+                    }
+                }
+            });
+            
+            // 鼠标控制
+            joystick.addEventListener('mousedown', function(e) {
+                e.preventDefault();
+                joystickActive = true;
+            });
+            
+            document.addEventListener('mousemove', function(e) {
+                if (!joystickActive) return;
+                
+                const deltaX = e.clientX - baseCenterX;
+                const deltaY = e.clientY - baseCenterY;
+                const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+                
+                if (distance > maxDistance) {
+                    const angle = Math.atan2(deltaY, deltaX);
+                    joystickX = Math.cos(angle) * maxDistance;
+                    joystickY = Math.sin(angle) * maxDistance;
+                } else {
+                    joystickX = deltaX;
+                    joystickY = deltaY;
+                }
+                
+                joystick.style.transform = `translate(${joystickX}px, ${joystickY}px)`;
+            });
+            
+            document.addEventListener('mouseup', function() {
+                if (joystickActive) {
+                    resetJoystick();
+                }
+            });
+        }
+        
+        function resetJoystick() {
+            joystickActive = false;
+            joystickX = 0;
+            joystickY = 0;
+            document.getElementById('joystick').style.transform = 'translate(0, 0)';
+        }
+        
+        // 跳跃控制
+        function handleJump() {
+            if (!player.isJumping && gameRunning) {
+                player.velY = JUMP_FORCE;
+                player.isJumping = true;
+            }
+        }
+        
+        // 开始游戏
+        function startGame() {
+            document.getElementById('startScreen').style.display = 'none';
+            gameRunning = true;
+        }
+        
+        // 重新开始游戏
+        function restartGame() {
+            currentLevel = 1;
+            score = 0;
+            document.getElementById('gameOverScreen').style.display = 'none';
+            document.getElementById('scoreDisplay').textContent = '分数: 0';
+            loadLevel(currentLevel);
+            gameRunning = true;
+        }
+        
+        // 下一关
+        function nextLevel() {
+            currentLevel++;
+            if (currentLevel > 15) {
+                // 游戏通关
+                document.getElementById('levelCompleteScreen').style.display = 'none';
+                document.getElementById('startScreen').style.display = 'flex';
+                document.getElementById('instructions').innerHTML = `
+                    <p>恭喜你通关了所有15个关卡！</p>
+                    <p>你的最终分数: ${score}</p>
+                    <p>点击开始按钮重新游戏</p>
+                `;
+                currentLevel = 1;
+                score = 0;
+                document.getElementById('scoreDisplay').textContent = '分数: 0';
+                gameRunning = false;
+            } else {
+                document.getElementById('levelCompleteScreen').style.display = 'none';
+                document.getElementById('levelDisplay').textContent = `关卡: ${currentLevel}`;
+                loadLevel(currentLevel);
+                gameRunning = true;
+            }
+        }
+        
+        // 加载关卡
+        function loadLevel(level) {
+            // 重置玩家位置
+            player.x = 50;
+            player.y = 300;
+            player.velX = 0;
+            player.velY = 0;
+            player.isJumping = false;
+            
+            // 清空现有元素
+            platforms = [];
+            coins = [];
+            hazards = [];
+            flag = null;
+            
+            // 根据关卡号生成不同的关卡
+            switch(level) {
+                case 1:
+                    // 第一关 - 基础平台
+                    platforms.push({ x: 0, y: 400, width: 300, height: 20, color: '#2ecc71' });
+                    platforms.push({ x: 350, y: 350, width: 200, height: 20, color: '#2ecc71' });
+                    platforms.push({ x: 600, y: 300, width: 200, height: 20, color: '#2ecc71' });
+                    coins.push({ x: 100, y: 370, collected: false });
+                    coins.push({ x: 400, y: 320, collected: false });
+                    flag = { x: 700, y: 260, width: FLAG_SIZE, height: FLAG_SIZE };
+                    break;
+                    
+                case 2:
+                    // 第二关 - 跳跃练习
+                    platforms.push({ x: 0, y: 400, width: 200, height: 20, color: '#2ecc71' });
+                    platforms.push({ x: 250, y: 350, width: 150, height: 20, color: '#2ecc71' });
+                    platforms.push({ x: 450, y: 300, width: 150, height: 20, color: '#2ecc71' });
+                    platforms.push({ x: 650, y: 250, width: 150, height: 20, color: '#2ecc71' });
+                    coins.push({ x: 280, y: 320, collected: false });
+                    coins.push({ x: 480, y: 270, collected: false });
+                    hazards.push({ x: 600, y: 280, width: 30, height: 20, color: '#e74c3c' });
+                    flag = { x: 700, y: 210, width: FLAG_SIZE, height: FLAG_SIZE };
+                    break;
+                    
+                case 3:
+                    // 第三关 - 简单障碍
+                    platforms.push({ x: 0, y: 400, width: 200, height: 20, color: '#2ecc71' });
+                    platforms.push({ x: 250, y: 350, width: 150, height: 20, color: '#2ecc71' });
+                    platforms.push({ x: 500, y: 300, width: 150, height: 20, color: '#2ecc71' });
+                    coins.push({ x: 270, y: 320, collected: false });
+                    coins.push({ x: 520, y: 270, collected: false });
+                    hazards.push({ x: 450, y: 280, width: 30, height: 20, color: '#e74c3c' });
+                    flag = { x: 600, y: 260, width: FLAG_SIZE, height: FLAG_SIZE };
+                    break;
+                    
+                case 4:
+                    // 第四关 - 狭窄通道
+                    platforms.push({ x: 0, y: 400, width: 150, height: 20, color: '#2ecc71' });
+                    platforms.push({ x: 200, y: 380, width: 100, height: 20, color: '#2ecc71' });
+                    platforms.push({ x: 350, y: 360, width: 100, height: 20, color: '#2ecc71' });
+                    platforms.push({ x: 500, y: 340, width: 100, height: 20, color: '#2ecc71' });
+                    platforms.push({ x: 650, y: 320, width: 150, height: 20, color: '#2ecc71' });
+                    hazards.push({ x: 300, y: 360, width: 30, height: 20, color: '#e74c3c' });
+                    hazards.push({ x: 450, y: 340, width: 30, height: 20, color: '#e74c3c' });
+                    coins.push({ x: 220, y: 350, collected: false });
+                    coins.push({ x: 370, y: 330, collected: false });
+                    coins.push({ x: 520, y: 310, collected: false });
+                    flag = { x: 700, y: 280, width: FLAG_SIZE, height: FLAG_SIZE };
+                    break;
+                    
+                case 5:
+                    // 第五关 - 更多障碍
+                    platforms.push({ x: 0, y: 400, width: 150, height: 20, color: '#2ecc71' });
+                    platforms.push({ x: 200, y: 350, width: 150, height: 20, color: '#2ecc71' });
+                    platforms.push({ x: 400, y: 300, width: 150, height: 20, color: '#2ecc71' });
+                    platforms.push({ x: 600, y: 250, width: 150, height: 20, color: '#2ecc71' });
+                    coins.push({ x: 220, y: 320, collected: false });
+                    coins.push({ x: 420, y: 270, collected: false });
+                    hazards.push({ x: 350, y: 330, width: 30, height: 20, color: '#e74c3c' });
+                    hazards.push({ x: 550, y: 230, width: 30, height: 20, color: '#e74c3c' });
+                    flag = { x: 650, y: 210, width: FLAG_SIZE, height: FLAG_SIZE };
+                    break;
+                    
+                // 可以继续添加更多关卡...
+                default:
+                    // 默认关卡 (6-15) - 只有固定平台
+                    const platformCount = 5 + Math.floor(level / 3);
+                    const hazardCount = Math.floor(level / 2);
+                    const coinCount = 3 + Math.floor(level / 2);
+                    
+                    let lastX = 0;
+                    let lastY = 400;
+                    
+                    // 生成随机平台
+                    for (let i = 0; i < platformCount; i++) {
+                        const width = 100 + Math.random() * 100;
+                        const height = 20;
+                        let x = lastX + 150 + Math.random() * 100;
+                        let y = lastY - 30 - Math.random() * 50;
+                        
+                        // 确保平台不会太高或太低
+                        y = Math.max(200, Math.min(450, y));
+                        
+                        platforms.push({
+                            x: x,
+                            y: y,
+                            width: width,
+                            height: height,
+                            color: '#2ecc71'
+                        });
+                        
+                        lastX = x;
+                        lastY = y;
+                    }
+                    
+                    // 生成金币
+                    for (let i = 0; i < coinCount; i++) {
+                        const platform = platforms[Math.floor(Math.random() * platforms.length)];
+                        coins.push({
+                            x: platform.x + 20 + Math.random() * (platform.width - 40),
+                            y: platform.y - 30,
+                            collected: false
+                        });
+                    }
+                    
+                    // 生成障碍物
+                    for (let i = 0; i < hazardCount; i++) {
+                        const platform = platforms[Math.floor(Math.random() * platforms.length)];
+                        hazards.push({
+                            x: platform.x + 10 + Math.random() * (platform.width - 40),
+                            y: platform.y - 20,
+                            width: 30,
+                            height: 20,
+                            color: '#e74c3c'
+                        });
+                    }
+                    
+                    // 终点旗
+                    const lastPlatform = platforms[platforms.length - 1];
+                    flag = {
+                        x: lastPlatform.x + lastPlatform.width - FLAG_SIZE,
+                        y: lastPlatform.y - FLAG_SIZE,
+                        width: FLAG_SIZE,
+                        height: FLAG_SIZE
+                    };
+                    break;
+            }
+        }
+        
+        // 游戏循环
+        function gameLoop() {
+            if (gameRunning) {
+                update();
+            }
+            render();
+            requestAnimationFrame(gameLoop);
+        }
+        
+        // 更新游戏状态
+        function update() {
+            // 处理玩家输入
+            handleInput();
+            
+            // 更新玩家位置
+            player.x += player.velX;
+            player.y += player.velY;
+            
+            // 应用重力
+            player.velY += GRAVITY;
+            
+            // 边界检查
+            if (player.x < 0) player.x = 0;
+            if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
+            
+            // 检查是否掉出屏幕
+            if (player.y > canvas.height) {
+                gameOver();
+                return;
+            }
+            
+            // 检测碰撞
+            checkCollisions();
+            
+            // 检查是否到达终点
+            if (flag && checkCollision(player, flag)) {
+                completeLevel();
+            }
+            
+            // 相机跟随 (简单实现)
+            if (player.x > canvas.width / 2) {
+                const offsetX = player.x - canvas.width / 2;
+                player.x = canvas.width / 2;
+                
+                // 移动所有游戏元素
+                platforms.forEach(p => p.x -= offsetX);
+                coins.forEach(c => c.x -= offsetX);
+                hazards.forEach(h => h.x -= offsetX);
+                flag.x -= offsetX;
+            }
+        }
+        
+        // 处理输入
+        function handleInput() {
+            // 重置水平速度
+            player.velX = 0;
+            
+            // 摇杆控制
+            if (joystickActive) {
+                player.velX = joystickX / 10 * MOVE_SPEED;
+            }
+            
+            // 键盘控制
+            if (keys['a'] || keys['arrowleft']) player.velX = -MOVE_SPEED;
+            if (keys['d'] || keys['arrowright']) player.velX = MOVE_SPEED;
+        }
+        
+        // 检测碰撞
+        function checkCollisions() {
+            let onGround = false;
+            
+            // 平台碰撞
+            platforms.forEach(platform => {
+                if (checkCollision(player, platform)) {
+                    // 从上方碰撞 (落地)
+                    if (player.velY > 0 && player.y + player.height - player.velY <= platform.y) {
+                        player.y = platform.y - player.height;
+                        player.velY = 0;
+                        player.isJumping = false;
+                        onGround = true;
+                    }
+                    // 从下方碰撞 (顶头)
+                    else if (player.velY < 0 && player.y - player.velY >= platform.y + platform.height) {
+                        player.y = platform.y + platform.height;
+                        player.velY = 0;
+                    }
+                    // 从左侧碰撞
+                    else if (player.velX > 0 && player.x + player.width - player.velX <= platform.x) {
+                        player.x = platform.x - player.width;
+                        player.velX = 0;
+                    }
+                    // 从右侧碰撞
+                    else if (player.velX < 0 && player.x - player.velX >= platform.x + platform.width) {
+                        player.x = platform.x + platform.width;
+                        player.velX = 0;
+                    }
+                }
+            });
+            
+            // 如果没有站在任何平台上，设置跳跃状态
+            if (!onGround) {
+                player.isJumping = true;
+            }
+            
+            // 金币碰撞
+            coins.forEach(coin => {
+                if (!coin.collected && checkCollision(player, coin)) {
+                    coin.collected = true;
+                    score += 100;
+                    document.getElementById('scoreDisplay').textContent = `分数: ${score}`;
+                }
+            });
+            
+            // 障碍物碰撞
+            hazards.forEach(hazard => {
+                if (checkCollision(player, hazard)) {
+                    gameOver();
+                }
+            });
+        }
+        
+        // 碰撞检测
+        function checkCollision(obj1, obj2) {
+            return obj1.x < obj2.x + obj2.width &&
+                   obj1.x + obj1.width > obj2.x &&
+                   obj1.y < obj2.y + obj2.height &&
+                   obj1.y + obj1.height > obj2.y;
+        }
+        
+        // 游戏结束
+        function gameOver() {
+            gameRunning = false;
+            document.getElementById('finalScore').textContent = `你的分数: ${score}`;
+            document.getElementById('gameOverScreen').style.display = 'flex';
+        }
+        
+        // 完成关卡
+        function completeLevel() {
+            gameRunning = false;
+            document.getElementById('levelScore').textContent = `本关分数: ${score}`;
+            document.getElementById('levelCompleteScreen').style.display = 'flex';
+        }
+        
+        // 渲染游戏
+        function render() {
+            // 清空画布
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // 绘制背景
+            ctx.fillStyle = '#87CEEB';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // 绘制平台
+            platforms.forEach(platform => {
+                ctx.fillStyle = platform.color;
+                ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+            });
+            
+            // 绘制金币
+            coins.forEach(coin => {
+                if (!coin.collected) {
+                    ctx.fillStyle = '#f1c40f';
+                    ctx.beginPath();
+                    ctx.arc(coin.x + COIN_SIZE/2, coin.y + COIN_SIZE/2, COIN_SIZE/2, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // 金币上的装饰
+                    ctx.fillStyle = '#e67e22';
+                    ctx.beginPath();
+                    ctx.arc(coin.x + COIN_SIZE/2, coin.y + COIN_SIZE/2, COIN_SIZE/4, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            });
+            
+            // 绘制障碍物
+            hazards.forEach(hazard => {
+                ctx.fillStyle = hazard.color;
+                ctx.fillRect(hazard.x, hazard.y, hazard.width, hazard.height);
+                
+                // 障碍物上的尖刺
+                ctx.fillStyle = '#c0392b';
+                for (let i = 0; i < 3; i++) {
+                    const spikeX = hazard.x + i * (hazard.width / 3) + (hazard.width / 6);
+                    ctx.beginPath();
+                    ctx.moveTo(spikeX, hazard.y);
+                    ctx.lineTo(spikeX - 5, hazard.y + 15);
+                    ctx.lineTo(spikeX + 5, hazard.y + 15);
+                    ctx.closePath();
+                    ctx.fill();
+                }
+            });
+            
+            // 绘制终点旗
+            if (flag) {
+                // 旗杆
+                ctx.fillStyle = '#7f8c8d';
+                ctx.fillRect(flag.x, flag.y, 5, flag.height);
+                
+                // 旗帜
+                ctx.fillStyle = '#2ecc71';
+                ctx.beginPath();
+                ctx.moveTo(flag.x + 5, flag.y);
+                ctx.lineTo(flag.x + flag.width, flag.y + flag.height / 3);
+                ctx.lineTo(flag.x + 5, flag.y + (flag.height / 3) * 2);
+                ctx.closePath();
+                ctx.fill();
+            }
+            
+            // 绘制玩家
+            ctx.fillStyle = player.color;
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+            
+            // 玩家眼睛 (增加辨识度)
+            ctx.fillStyle = 'white';
+            ctx.fillRect(player.x + 8, player.y + 8, 6, 6);
+            ctx.fillRect(player.x + 16, player.y + 8, 6, 6);
+            
+            // 玩家嘴巴 (根据移动方向变化)
+            ctx.fillStyle = 'black';
+            if (player.velX > 0) {
+                // 向右移动 - 嘴巴在右侧
+                ctx.fillRect(player.x + 20, player.y + 18, 8, 4);
+            } else if (player.velX < 0) {
+                // 向左移动 - 嘴巴在左侧
+                ctx.fillRect(player.x + 2, player.y + 18, 8, 4);
+            } else {
+                // 静止 - 嘴巴在中间
+                ctx.fillRect(player.x + 11, player.y + 18, 8, 4);
+            }
+        }
+        
+        // 启动游戏
+        window.onload = initGame;
+    </script>
+</body>
+</html>
