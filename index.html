@@ -114,17 +114,11 @@
         </ul>
         
         <h4>示例代码：</h4>
-        <pre><code>// FeiSharp 示例
-using namespace System.Console.Output, System.Math.Operators;
-set main.point = main();
-function:int main() {
-    let nums = DATA[int]:[1, 2, 3, 4, 5];
-    let squares = nums.Map(x => x ^ 2);
-    Console.Write($"平方数: {squares}");
-    return 0;
-}</code></pre>
+                  
+        <pre id="FeiSharp_Code_Example"><code>
+</code></pre>
         
-        <a href="https://github.com/Mars-FeiFei/FeiSharp-Terminal" class="download-btn">下载 FeiSharp 最新版本终端(Windows版本)v</a>
+        <a href="https://github.com/Mars-FeiFei/FeiSharp-Terminal" class="download-btn">下载 FeiSharp 最新版本终端(Windows版本)</a>
         <br/>
         <a href="https://github.com/Mars-FeiFei/FeiSharp-VSCode-Addon" class="download-btn">下载 FeiSharp 对应的Visual Studio Code插件</a>
         <br/>
@@ -152,5 +146,15 @@ function:int main() {
         <p>© 2023 个人开发者 | 联系方式: liuqingyuff@outlook.com</p>
         <p>所有项目均为开源软件，遵循MIT许可证</p>
     </footer>
+    <script>
+            document.getElementById("FeiSharp_Code_Example").innerText = "// FeiSharp 示例\n"+
+"#include <std/console>\n"+
+"using library std.lib\n"+
+"function main(DATA:string[ARGVMAXVALUE] argv, int argc)\n"+
+"fbegin:\n"+
+"    print(\"Hello, World!\");\n"+
+"    return 0;\n"+
+"fend;\n";
+        </script>  
 </body>
 </html>
