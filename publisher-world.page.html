@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyLine For World - 末日主题出版社</title>
+    <style>
+        /* 全局样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* 导航栏 */
+        header {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 1.5rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #333;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #ff4757;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .logo span {
+            color: #70a1ff;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 2rem;
+        }
+        
+        .nav-links a {
+            color: #e0e0e0;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #ff4757;
+        }
+        
+        /* 英雄区域 */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            padding-top: 80px;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            color: #ff4757;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: #e0e0e0;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #ff4757;
+            color: white;
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #ff6b81;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* 关于我们 */
+        .about {
+            padding: 5rem 0;
+            background-color: #1e1e1e;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2.5rem;
+            color: #70a1ff;
+        }
+        
+        .about-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .about-text {
+            flex: 1;
+            min-width: 300px;
+            padding: 0 2rem;
+        }
+        
+        .about-text h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: #ff4757;
+        }
+        
+        .about-text p {
+            margin-bottom: 1.5rem;
+        }
+        
+        .about-image {
+            flex: 1;
+            min-width: 300px;
+            padding: 2rem;
+        }
+        
+        .about-image img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* 出版物 */
+        .publications {
+            padding: 5rem 0;
+            background-color: #121212;
+        }
+        
+        .books {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+        }
+        
+        .book {
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            overflow: hidden;
+            width: 280px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+        }
+        
+        .book:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .book-cover {
+            height: 350px;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .book-info {
+            padding: 1.5rem;
+        }
+        
+        .book-info h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: #70a1ff;
+        }
+        
+        .book-info p {
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .book-info .price {
+            color: #ff4757;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        /* 书籍详情模态框 */
+        .book-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            overflow-y: auto;
+            padding: 2rem 0;
+        }
+        
+        .modal-content {
+            background-color: #1e1e1e;
+            max-width: 800px;
+            margin: 0 auto;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            background-color: #121212;
+            border-bottom: 1px solid #333;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            color: #ff4757;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            color: #e0e0e0;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .close-modal:hover {
+            color: #ff4757;
+        }
+        
+        .modal-body {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 2rem;
+        }
+        
+        .modal-cover {
+            flex: 1;
+            min-width: 300px;
+            height: 400px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 5px;
+        }
+        
+        .modal-details {
+            flex: 1;
+            min-width: 300px;
+            padding: 0 2rem;
+        }
+        
+        .modal-details h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #70a1ff;
+        }
+        
+        .modal-author {
+            color: #aaa;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-price {
+            font-size: 1.5rem;
+            color: #ff4757;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-description {
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+        
+        .modal-footer {
+            padding: 1.5rem;
+            background-color: #121212;
+            border-top: 1px solid #333;
+            text-align: right;
+        }
+        
+        /* 联系我们 */
+        .contact {
+            padding: 5rem 0;
+            background-color: #121212;
+        }
+        
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #1e1e1e;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #70a1ff;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: #121212;
+            border: 1px solid #333;
+            border-radius: 5px;
+            color: #e0e0e0;
+            font-size: 1rem;
+        }
+        
+        .form-group textarea {
+            height: 150px;
+            resize: vertical;
+        }
+        
+        /* 页脚 */
+        footer {
+            background-color: #000;
+            padding: 3rem 0;
+            text-align: center;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .social-links {
+            display: flex;
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+        
+        .social-links li {
+            margin: 0 1rem;
+        }
+        
+        .social-links a {
+            color: #e0e0e0;
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+        
+        .social-links a:hover {
+            color: #ff4757;
+        }
+        
+        .copyright {
+            color: #777;
+            font-size: 0.9rem;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .about-content {
+                flex-direction: column;
+            }
+            
+            .about-text, .about-image {
+                padding: 1rem;
+            }
+            
+            .modal-body {
+                flex-direction: column;
+            }
+            
+            .modal-cover {
+                margin-bottom: 2rem;
+            }
+            
+            .modal-details {
+                padding: 0;
+            }
+        }
+        
+        /* 动画 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 1s ease-out forwards;
+        }
+        
+        .delay-1 {
+            animation-delay: 0.2s;
+        }
+        
+        .delay-2 {
+            animation-delay: 0.4s;
+        }
+        
+        .delay-3 {
+            animation-delay: 0.6s;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">SkyLine <span>For World </span><span>世界的天际线</span></div>
+                <ul class="nav-links">
+                    <li><a href="#about">关于我们</a></li>
+                    <li><a href="#publications">出版物</a></li>
+                    <li><a href="#contact">联系我们</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- 英雄区域 -->
+    <section class="hero">
+        <div class="hero-content container fade-in">
+            <h1>探索末日的边界</h1>
+            <p>SkyLine For World 是专注于末日主题的先锋出版社。</p>
+            <a href="#publications" class="btn">探索我们的作品</a>
+        </div>
+    </section>
+    
+    <!-- 关于我们 -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="section-title fade-in">关于我们</h2>
+            <div class="about-content">
+                <div class="about-text fade-in delay-1">
+                    <h3>末日主题的权威之声</h3>
+                    <p>SkyLine For World 成立于2025年，最初是由一群末日预言爱好者和科幻作家组成的独立出版团体。我们相信，通过探索末日的可能性，人类能够更好地理解自身和这个星球的未来。</p>
+                </div>
+                <div class="about-image fade-in delay-2">
+                    <img src="https://images.unsplash.com/photo-1589998059171-988d887df646?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="SkyLine出版社总部">
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 出版物 -->
+    <section id="publications" class="publications">
+        <div class="container">
+            <h2 class="section-title fade-in">精选出版物</h2>
+            <div class="books">
+                <div class="book fade-in delay-1" onclick="openBookModal('Run over from Amazon for 12 days', '丧尸病毒爆发生存指南', '$0.00(FOR FREE!)', 'https://images.unsplash.com/photo-1535905557558-afc4877a26fc?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80', 'Leo herch/Lein target', '在这本令人毛骨悚然的生存指南中，Leo herch/Lein target详细描述了当丧尸病毒在亚马逊雨林爆发时的生存策略。本书基于真实科学研究和生存专家访谈，提供了从基础防御到长期生存的全面指导。')">
+                    <div class="book-cover" style="background-image: url('https://images.unsplash.com/photo-1535905557558-afc4877a26fc?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="book-info">
+                        <h3>Run over from Amazon for 12 days</h3>
+                        <p>丧尸病毒爆发生存指南</p>
+                        <p class="price">$0.00(FOR FREE!)</p>
+                    </div>
+                </div>
+                <div class="book fade-in delay-2" onclick="openBookModal('The Last Dawn', '核冬天生存手册', '$0.00(FOR FREE!)', 'https://images.unsplash.com/photo-1563089145-599997674d42?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80', 'Change Ityuy', '核战争后的世界将变得面目全非。Change Ityuy在这本权威指南中，详细描述了如何在核冬天中寻找食物、净化水源、建立庇护所，以及如何在辐射环境中生存。')">
+                    <div class="book-cover" style="background-image: url('https://images.unsplash.com/photo-1563089145-599997674d42?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="book-info">
+                        <h3>The Last Dawn</h3>
+                        <p>核冬天生存手册</p>
+                        <p class="price">$0.00(FOR FREE!)</p>
+                    </div>
+                </div>
+                <div class="book fade-in delay-3" onclick="openBookModal('Silicon based awakening', 'AI统治下的人类社会', '$0.00(FOR FREE!)', 'https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80', 'Lytest Cycle', '当人工智能超越人类智能，我们该如何生存？Lytest Cycle在这本惊悚小说中探讨了人类在超级AI统治下的生存策略和心理变化。')">
+                    <div class="book-cover" style="background-image: url('https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                    <div class="book-info">
+                        <h3>Silicon based awakening</h3>
+                        <p>AI统治下的人类社会</p>
+                        <p class="price">$0.00(FOR FREE!)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 书籍详情模态框 -->
+    <div id="bookModal" class="book-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalBookTitle">书籍标题</h2>
+                <button class="close-modal" onclick="closeBookModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-cover" id="modalBookCover"></div>
+                <div class="modal-details">
+                    <h3 id="modalBookName">书名</h3>
+                    <p class="modal-author" id="modalBookAuthor">作者</p>
+                    <p class="modal-price" id="modalBookPrice">价格</p>
+                    <p class="modal-description" id="modalBookDescription">书籍描述内容将显示在这里...</p>
+                    <a href="#" class="btn" id="readBookBtn">在线阅读</a>
+                    <a href="#" class="btn" id="downloadBookBtn" style="background-color: #70a1ff; margin-left: 1rem;">下载电子书</a>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="closeBookModal()">关闭</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 联系我们 -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title fade-in">联系我们</h2>
+            <div class="contact-form fade-in delay-1">
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="name">姓名</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">邮箱</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">留言</label>
+                        <textarea id="message" name="message" required></textarea>
+                    </div>
+                    <button type="submit" class="btn">发送消息</button>
+                </form>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 页脚 -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="logo" style="margin-bottom: 1.5rem;">SkyLine <span>For World</span></div>
+                <ul class="social-links">
+                    <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                    <li><a href="#"><i class="fab fa-facebook"></i></a></li>
+                    <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+                    <li><a href="#"><i class="fab fa-goodreads"></i></a></li>
+                </ul>
+                <p class="copyright">© 2025 SkyLine For World 出版社. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Font Awesome 图标库 -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    
+    <!-- 自定义JavaScript -->
+    <script>
+        // 表单提交处理
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+            let currentDate = new Date();
+            currentDate.setDate(currentDate.getDate() + 10);
+            let year = currentDate.getFullYear();
+            let month = currentDate.getMonth() + 1; 
+            let day = currentDate.getDate();
+            let formattedDate = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+            alert(`感谢您的留言，${name}！我们会尽量在${formattedDate}之前回复您。`);
+            this.reset();
+        });
+        
+        // 滚动动画
+        document.addEventListener('DOMContentLoaded', function() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            
+            const fadeObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate');
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+            
+            fadeElements.forEach(element => {
+                fadeObserver.observe(element);
+            });
+            
+            // 平滑滚动
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+        
+        // 书籍详情模态框功能
+        function openBookModal(title, subtitle, price, coverImage, author, description) {
+            const modal = document.getElementById('bookModal');
+            document.getElementById('modalBookTitle').textContent = title;
+            document.getElementById('modalBookName').textContent = title;
+            document.getElementById('modalBookAuthor').textContent = `作者: ${author}`;
+            document.getElementById('modalBookPrice').textContent = price;
+            document.getElementById('modalBookDescription').textContent = description;
+            document.getElementById('modalBookCover').style.backgroundImage = `url('${coverImage}')`;
+            
+            // 设置下载和阅读链接
+            document.getElementById('readBookBtn').href = `#read-${title.replace(/\s+/g, '-').toLowerCase()}`;
+            document.getElementById('downloadBookBtn').href = `#download-${title.replace(/\s+/g, '-').toLowerCase()}`;
+            
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeBookModal() {
+            document.getElementById('bookModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        // 点击模态框外部关闭
+        window.onclick = function(event) {
+            const modal = document.getElementById('bookModal');
+            if (event.target == modal) {
+                closeBookModal();
+            }
+        }
+        
+        // 按ESC键关闭模态框
+        document.onkeydown = function(evt) {
+            evt = evt || window.event;
+            if (evt.key === "Escape") {
+                closeBookModal();
+            }
+        };
+    </script>
+</body>
+</html>
