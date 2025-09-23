@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VLS DLL本地存储插件页面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            padding: 30px;
+        }
+        
+        .upload-section {
+            background: #f8f9fa;
+            border: 2px dashed #6a11cb;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-section:hover {
+            background: #f0f2f5;
+            border-color: #2575fc;
+        }
+        
+        .upload-icon {
+            font-size: 50px;
+            color: #6a11cb;
+            margin-bottom: 15px;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .upload-btn {
+            background: #6a11cb;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s;
+            margin-top: 15px;
+        }
+        
+        .upload-btn:hover {
+            background: #2575fc;
+        }
+        
+        .file-list {
+            margin-top: 30px;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #333;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+        
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            transition: background 0.2s;
+        }
+        
+        .file-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .file-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .file-icon {
+            font-size: 24px;
+            color: #6a11cb;
+            margin-right: 15px;
+        }
+        
+        .file-name {
+            font-weight: 500;
+        }
+        
+        .file-size {
+            color: #666;
+            font-size: 0.9rem;
+            margin-left: 10px;
+        }
+        
+        .file-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .download-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s;
+        }
+        
+        .download-btn:hover {
+            background: #218838;
+        }
+        
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s;
+        }
+        
+        .delete-btn:hover {
+            background: #c82333;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .empty-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+            color: #ddd;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .file-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .file-actions {
+                margin-top: 10px;
+                width: 100%;
+                justify-content: flex-end;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>VLS DLL本地存储插件页面</h1>
+            <p class="subtitle">在本地上传、下载VLS插件(DLL文件)</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="upload-section">
+                <div class="upload-icon">📁</div>
+                <h2>上传VLS插件DLL文件</h2>
+                <p>选择或拖放DLL文件到此处上传</p>
+                <input type="file" id="fileInput" class="file-input" accept=".dll">
+                <button class="upload-btn" id="uploadTrigger">选择文件</button>
+                <p id="selectedFileName" style="margin-top: 10px; color: #666;"></p>
+            </div>
+            
+            <div class="file-list">
+                <h2 class="section-title">插件文件列表</h2>
+                <div id="filesContainer">
+                    <div class="empty-state">
+                        <div class="empty-icon">📂</div>
+                        <p>暂无文件，请上传DLL文件</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'dllFiles';
+        const fileInput = document.getElementById('fileInput');
+        const uploadTrigger = document.getElementById('uploadTrigger');
+        const selectedFileName = document.getElementById('selectedFileName');
+        const filesContainer = document.getElementById('filesContainer');
+        function renderFileList() {
+            const files = getFilesFromStorage();
+            
+            if (files.length === 0) {
+                filesContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📂</div>
+                        <p>暂无文件，请上传DLL文件</p>
+                    </div>
+                `;
+                return;
+            }
+            filesContainer.innerHTML = files.map(file => `
+                <div class="file-item" data-id="${file.id}">
+                    <div class="file-info">
+                        <div class="file-icon">📄</div>
+                        <div>
+                            <span class="file-name">${file.name}</span>
+                            <span class="file-size">${formatFileSize(file.size)}</span>
+                        </div>
+                    </div>
+                    <div class="file-actions">
+                        <button class="download-btn" onclick="downloadFile('${file.id}')">下载</button>
+                        <button class="delete-btn" onclick="deleteFile('${file.id}')">删除</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        function getFilesFromStorage() {
+            const filesJson = localStorage.getItem(STORAGE_KEY);
+            return filesJson ? JSON.parse(filesJson) : [];
+        }
+        function saveFilesToStorage(files) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(files));
+        }
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+        function uploadFile(file) {
+            if (!file.name.toLowerCase().endsWith('.dll')) {
+                alert('请上传DLL文件！');
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const fileData = e.target.result;
+                const files = getFilesFromStorage();
+                if (files.some(f => f.name === file.name)) {
+                    if (!confirm('已存在同名文件，是否覆盖？')) {
+                        return;
+                    }
+                    files = files.filter(f => f.name !== file.name);
+                }
+                
+                const newFile = {
+                    id: Date.now().toString(),
+                    name: file.name,
+                    size: file.size,
+                    data: fileData,
+                    uploadDate: new Date().toISOString()
+                };
+                files.push(newFile);
+                saveFilesToStorage(files);
+                renderFileList();
+                selectedFileName.textContent = `已上传: ${file.name}`;
+            };
+            reader.readAsDataURL(file);
+        }
+        function downloadFile(fileId) {
+            const files = getFilesFromStorage();
+            const file = files.find(f => f.id === fileId);
+            if (file) {
+                const link = document.createElement('a');
+                link.href = file.data;
+                link.download = file.name;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
+        function deleteFile(fileId) {
+            if (confirm('确定要删除这个文件吗？')) {
+                const files = getFilesFromStorage();
+                const updatedFiles = files.filter(f => f.id !== fileId);
+                saveFilesToStorage(updatedFiles);
+                renderFileList();
+            }
+        }
+        uploadTrigger.addEventListener('click', () => {
+            fileInput.click();
+        });
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+                selectedFileName.textContent = `已选择: ${file.name}`;
+                uploadFile(file);
+            }
+        });
+        const uploadSection = document.querySelector('.upload-section');
+        uploadSection.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadSection.style.background = '#e9ecef';
+            uploadSection.style.borderColor = '#2575fc';
+        });
+        uploadSection.addEventListener('dragleave', () => {
+            uploadSection.style.background = '#f8f9fa';
+            uploadSection.style.borderColor = '#6a11cb';
+        });
+        uploadSection.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadSection.style.background = '#f8f9fa';
+            uploadSection.style.borderColor = '#6a11cb';
+            if (e.dataTransfer.files.length > 0) {
+                const file = e.dataTransfer.files[0];
+                selectedFileName.textContent = `已选择: ${file.name}`;
+                uploadFile(file);
+            }
+        });
+        document.addEventListener('DOMContentLoaded', () => {
+            renderFileList();
+        });
+    </script>
+</body>
+</html>
