@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FeiSharp Parser 文档</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        :root {
+            --primary-color: #0078d4;
+            --secondary-color: #2b579a;
+            --bg-color: #f6f6f6;
+            --sidebar-bg: #f3f2f1;
+            --border-color: #e1dfdd;
+            --text-color: #323130;
+            --code-bg: #f2f2f2;
+        }
+        
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+        
+        /* 侧边栏导航 */
+        .sidebar {
+            width: 280px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+        }
+        
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .sidebar h1 {
+            font-size: 20px;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-subtitle {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .nav-section {
+            padding: 15px 0;
+        }
+        
+        .nav-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            padding: 5px 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .nav-list {
+            list-style: none;
+        }
+        
+        .nav-item {
+            padding: 8px 20px;
+        }
+        
+        .nav-item a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 14px;
+            display: block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        
+        .nav-item a:hover {
+            background-color: rgba(0, 120, 212, 0.1);
+            color: var(--primary-color);
+        }
+        
+        .nav-item.active a {
+            background-color: rgba(0, 120, 212, 0.15);
+            color: var(--primary-color);
+            font-weight: 500;
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        /* 主内容区 */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 40px;
+            max-width: 1200px;
+        }
+        
+        .header {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 36px;
+            font-weight: 300;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .breadcrumb {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .breadcrumb a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .breadcrumb span {
+            margin: 0 5px;
+        }
+        
+        /* 内容卡片 */
+        .content-section {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 24px;
+            font-weight: 400;
+            margin-bottom: 20px;
+            color: var(--secondary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+        
+        .subsection-title {
+            font-size: 20px;
+            font-weight: 400;
+            margin: 25px 0 15px;
+            color: var(--text-color);
+        }
+        
+        .code-block {
+            background-color: var(--code-bg);
+            border-radius: 4px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .code-block pre {
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+        
+        .syntax-block {
+            background-color: #f8f9fa;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .keyword-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .keyword-table th {
+            background-color: var(--sidebar-bg);
+            text-align: left;
+            padding: 12px 15px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .keyword-table td {
+            padding: 10px 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .keyword-table tr:hover {
+            background-color: rgba(0, 120, 212, 0.05);
+        }
+        
+        .note {
+            background-color: #fff4ce;
+            border-left: 4px solid #ffb900;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        
+        .warning {
+            background-color: #fed9cc;
+            border-left: 4px solid #d83b01;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        
+        .example {
+            background-color: #e7f4ff;
+            border-left: 4px solid var(--primary-color);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        
+        .example-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 240px;
+            }
+            
+            .main-content {
+                margin-left: 240px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                max-height: 300px;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 侧边栏导航 -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h1>FeiSharp Parser</h1>
+            <div class="sidebar-subtitle">版本 8.0</div>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-title">概述</div>
+            <ul class="nav-list">
+                <li class="nav-item active"><a href="#overview">Parser 概述</a></li>
+                <li class="nav-item"><a href="#architecture">架构设计</a></li>
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-title">核心语法</div>
+            <ul class="nav-list">
+                <li class="nav-item"><a href="#keywords">关键字语法</a></li>
+                <li class="nav-item"><a href="#variables">变量操作</a></li>
+                <li class="nav-item"><a href="#functions">函数定义</a></li>
+                <li class="nav-item"><a href="#control-flow">控制流</a></li>
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-title">内置功能</div>
+            <ul class="nav-list">
+                <li class="nav-item"><a href="#math-functions">数学函数</a></li>
+                <li class="nav-item"><a href="#string-functions">字符串函数</a></li>
+                <li class="nav-item"><a href="#io-operations">I/O 操作</a></li>
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-title">命名空间</div>
+            <ul class="nav-list">
+                <li class="nav-item"><a href="#namespaces">支持的命名空间</a></li>
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-title">示例代码</div>
+            <ul class="nav-list">
+                <li class="nav-item"><a href="#basic-examples">基础示例</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- 主内容区 -->
+    <main class="main-content">
+        <div class="header">
+            <h1>FeiSharp Parser 文档</h1>
+            <div class="breadcrumb">
+                <a href="#">FeiSharp</a> <span>›</span>
+                <a href="#">语言参考</a> <span>›</span>
+                <span>Parser 类</span>
+            </div>
+        </div>
+        
+        <!-- 概述部分 -->
+        <section id="overview" class="content-section">
+            <h2 class="section-title">Parser 概述</h2>
+            <p>FeiSharp Parser 是一个用于解析和执行 FeiSharp 脚本语言的解析器。它支持变量声明、函数定义、控制流、类系统以及多种内置功能。</p>
+            
+            <div class="note">
+                <strong>注意：</strong> FeiSharp 是一种动态类型脚本语言，主要用于自动化任务和快速原型开发。
+            </div>
+            
+            <div class="code-block">
+                <pre>public class Parser
+{
+    // 解析器的主要入口方法
+    public void ParseStatements(string funcName = "")
+    {
+        // 解析各种语句
+    }
+}</pre>
+            </div>
+        </section>
+        
+        <!-- 架构设计 -->
+        <section id="architecture" class="content-section">
+            <h2 class="section-title">架构设计</h2>
+            <p>Parser 采用递归下降解析器设计模式，包含以下核心组件：</p>
+            
+            <h3 class="subsection-title">核心数据结构</h3>
+            <div class="syntax-block">
+                <ul>
+                    <li><strong>_tokens</strong>: 词法分析器生成的令牌列表</li>
+                    <li><strong>_variables</strong>: 存储变量名和值的字典</li>
+                    <li><strong>_functions</strong>: 存储函数信息的字典</li>
+                    <li><strong>_classInfos</strong>: 存储类信息的字典</li>
+                    <li><strong>_results</strong>: 存储函数返回值的字典</li>
+                </ul>
+            </div>
+            
+            <h3 class="subsection-title">内置常量</h3>
+            <p>Parser 初始化时自动创建以下常量：</p>
+            <div class="code-block">
+                <pre>_variables.NewAdd("true", true);
+_variables.NewAdd("false", false);
+_variables.NewAdd("null", null);
+_variables.NewAdd("pi", Math.PI);
+_variables.NewAdd("e", Math.E);
+_variables.NewAdd("tau", Math.Tau);
+_variables.NewAdd("buildVersion", "8.0");</pre>
+            </div>
+        </section>
+        
+        <!-- 关键字语法 -->
+        <section id="keywords" class="content-section">
+            <h2 class="section-title">关键字语法</h2>
+            <p>FeiSharp 支持以下关键字，每个关键字都有特定的语法格式：</p>
+            
+            <table class="keyword-table">
+                <thead>
+                    <tr>
+                        <th>关键字</th>
+                        <th>语法</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>var</code></td>
+                        <td><code>var variableName = value;</code></td>
+                        <td>声明变量并赋值</td>
+                    </tr>
+                    <tr>
+                        <td><code>print</code></td>
+                        <td><code>print(text);</code></td>
+                        <td>输出文本到控制台</td>
+                    </tr>
+                    <tr>
+                        <td><code>init</code></td>
+                        <td><code>init(variableName, Type);</code></td>
+                        <td>初始化变量为默认值</td>
+                    </tr>
+                    <tr>
+                        <td><code>set</code></td>
+                        <td><code>set variableName = value;</code></td>
+                        <td>修改变量值</td>
+                    </tr>
+                    <tr>
+                        <td><code>func</code></td>
+                        <td><code>function funcName(parameters)fbegin: ... fend;</code></td>
+                        <td>定义函数</td>
+                    </tr>
+                    <tr>
+                        <td><code>if</code></td>
+                        <td><code>if(condition) ibegin ...  iend</code></td>
+                        <td>条件语句</td>
+                    </tr>
+                    <tr>
+                        <td><code>while</code></td>
+                        <td><code>while(condition) wbegin ...  wend</code></td>
+                        <td>循环语句</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="example">
+                <div class="example-title">示例：基础语法</div>
+                <pre>// 变量声明和赋值;
+var name = "FeiSharp";
+var count = 10;
+
+// 条件语句;
+if(count > 5)
+ibegin:
+    print("Count is greater than 5");
+iend;
+
+// 循环语句;
+while(count > 0)
+wbegin:
+    print(count);
+    set("count", count - 1);
+wend;
+
+// 函数定义;
+function add(a, b)
+fbegin:
+    _return a + b;
+fend;
+
+// 函数调用;
+var result = add(5, 3);
+print(result);</pre>
+            </div>
+        </section>
+        
+        <!-- 数学函数 -->
+        <section id="math-functions" class="content-section">
+            <h2 class="section-title">数学函数</h2>
+            <p>FeiSharp 提供了一系列内置数学函数：</p>
+            
+            <table class="keyword-table">
+                <thead>
+                    <tr>
+                        <th>函数</th>
+                        <th>语法</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>sin</code></td>
+                        <td><code>sin(angle);</code></td>
+                        <td>计算正弦值</td>
+                    </tr>
+                    <tr>
+                        <td><code>cos</code></td>
+                        <td><code>cos(angle);</code></td>
+                        <td>计算余弦值</td>
+                    </tr>
+                    <tr>
+                        <td><code>tan</code></td>
+                        <td><code>tan(angle);</code></td>
+                        <td>计算正切值</td>
+                    </tr>
+                    <tr>
+                        <td><code>pow</code></td>
+                        <td><code>pow(base, exponent);</code></td>
+                        <td>计算幂运算</td>
+                    </tr>
+                    <tr>
+                        <td><code>sqrt</code></td>
+                        <td><code>sqrt(value, root);</code></td>
+                        <td>计算根运算</td>
+                    </tr>
+                    <tr>
+                        <td><code>rand</code></td>
+                        <td><code>rand(min, max);</code></td>
+                        <td>生成随机数</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="example">
+                <div class="example-title">示例：数学运算</div>
+                <pre>// 计算幂运算;
+var result = pow(2, 3);  // result = 8;
+
+// 计算正弦值;
+var sinValue = sin(0.5);  // sinValue = sin(0.5);
+
+// 生成随机数;
+var randomNum = rand(1, 100);  // 生成1-100的随机数;
+
+// 计算平方根;
+var root = sqrt(16, 2);  // root = 4;</pre>
+            </div>
+        </section>
+        
+        <!-- 字符串函数 -->
+        <section id="string-functions" class="content-section">
+            <h2 class="section-title">字符串函数</h2>
+            <p>字符串处理函数：</p>
+            
+            <table class="keyword-table">
+                <thead>
+                    <tr>
+                        <th>函数</th>
+                        <th>语法</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>strlen</code></td>
+                        <td><code>strlen(string);</code></td>
+                        <td>获取字符串长度</td>
+                    </tr>
+                    <tr>
+                        <td><code>strreplace</code></td>
+                        <td><code>strreplace(target, replacement);</code></td>
+                        <td>替换字符串</td>
+                    </tr>
+                    <tr>
+                        <td><code>substr</code></td>
+                        <td><code>substr(source, startIndex);</code></td>
+                        <td>获取子字符串</td>
+                    </tr>
+                    <tr>
+                        <td><code>strindexof</code></td>
+                        <td><code>strindexof(source, index);</code></td>
+                        <td>获取指定索引的字符</td>
+                    </tr>
+                    <tr>
+                        <td><code>cstr</code></td>
+                        <td><code>cstr(value, variableName);</code></td>
+                        <td>转换为字符串</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="example">
+                <div class="example-title">示例：字符串操作</div>
+                <pre>// 字符串长度;
+var length = strlen("Hello World");  // length = 11;
+
+// 字符串替换;
+var text = strreplace("Hello, world!", "Hello", "Hi");  // text = "Hi World";
+
+// 子字符串;
+var sub = substr("Hello World", 6);  // sub = "World";
+
+// 类型转换;
+cstr(123, "strValue");  // strValue = "123";</pre>
+            </div>
+        </section>
+        
+        <!-- I/O 操作 -->
+        <section id="io-operations" class="content-section">
+            <h2 class="section-title">I/O 操作</h2>
+            <p>文件读写和用户输入操作需要导入相应命名空间：</p>
+            
+            <div class="warning">
+                <strong>安全提示：</strong> 所有文件操作都会请求用户确认，确保安全性。
+            </div>
+            
+            <table class="keyword-table">
+                <thead>
+                    <tr>
+                        <th>操作</th>
+                        <th>语法</th>
+                        <th>命名空间</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>read</code></td>
+                        <td><code>read(variableName as filePath);</code></td>
+                        <td>FeiSharp.IO</td>
+                    </tr>
+                    <tr>
+                        <td><code>export</code></td>
+                        <td><code>export(content as filePath);</code></td>
+                        <td>FeiSharp.IO</td>
+                    </tr>
+                    <tr>
+                        <td><code>readline</code></td>
+                        <td><code>readline(variableName);</code></td>
+                        <td>内置</td>
+                    </tr>
+                    <tr>
+                        <td><code>readkey</code></td>
+                        <td><code>readkey(variableName);</code></td>
+                        <td>内置</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="example">
+                <div class="example-title">示例：文件操作</div>
+                <pre>// 导入命名空间
+import "FeiSharp.IO";
+
+// 读取文件内容
+read("fileContent" as "data.txt");
+
+// 写入文件
+export("Hello World" as "output.txt");
+
+// 读取用户输入
+readline("userInput");</pre>
+            </div>
+        </section>
+        <!-- 命名空间 -->
+        <section id="namespaces" class="content-section">
+            <h2 class="section-title">命名空间</h2>
+            <p>FeiSharp 使用命名空间来组织功能模块：</p>
+            
+            <table class="keyword-table">
+                <thead>
+                    <tr>
+                        <th>命名空间</th>
+                        <th>功能</th>
+                        <th>启用关键字</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>FeiSharp.IO</code></td>
+                        <td>文件输入输出</td>
+                        <td><code>read</code>, <code>export</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>FeiSharp.Text.Json</code></td>
+                        <td>JSON 处理</td>
+                        <td><code>getVarsFromJsonFilePath...</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>FeiSharp.Net</code></td>
+                        <td>网络操作</td>
+                        <td><code>gethtml...</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>FeiSharp.System</code></td>
+                        <td>系统交互</td>
+                        <td><code>sys...</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>$prelude.fsc</code></td>
+                        <td>FeiSharp标准内置库文件</td>
+                        <td><code>sin...</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>$math.fsc</code></td>
+                        <td>FeiSharp标准数学库文件</td>
+                        <td><code>sin...</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>$text.fsc</code></td>
+                        <td>FeiSharp标准文本处理库文件</td>
+                        <td><code>strreplace...</code></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="example">
+                <div class="example-title">示例：使用命名空间</div>
+                <pre>// 导入命名空间;
+import "FeiSharp.IO";
+import "FeiSharp.Net";
+
+// 现在可以使用相关功能;
+read("data" as "file.txt");
+
+// 获取网页内容;
+gethtml("https://example.com", "htmlContent");</pre>
+            </div>
+        </section>
+        
+        <!-- 示例代码 -->
+        <section id="basic-examples" class="content-section">
+            <h2 class="section-title">示例代码</h2>
+            
+            <h3 class="subsection-title">示例 1: 读取文件内容</h3>
+            <div class="code-block">
+                <pre>
+                    import "FeiSharp.IO";
+                    read("fileContent", "data.txt");
+                    print(fileContent);
+                </pre>
+            </div>
+        </section>
+    </main>
+    
+    <script>
+        // 平滑滚动和导航高亮
+        document.addEventListener('DOMContentLoaded', function() {
+            const navItems = document.querySelectorAll('.nav-item a');
+            const sections = document.querySelectorAll('.content-section');
+            
+            // 导航点击事件
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // 移除所有active类
+                    navItems.forEach(nav => {
+                        nav.parentElement.classList.remove('active');
+                    });
+                    
+                    // 添加active类
+                    this.parentElement.classList.add('active');
+                    
+                    // 滚动到对应部分
+                    const targetId = this.getAttribute('href');
+                    if (targetId !== '#') {
+                        const targetSection = document.querySelector(targetId);
+                        if (targetSection) {
+                            window.scrollTo({
+                                top: targetSection.offsetTop - 20,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                });
+            });
+            
+            // 滚动时更新导航高亮
+            window.addEventListener('scroll', function() {
+                let current = '';
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    
+                    if (scrollY >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                navItems.forEach(item => {
+                    item.parentElement.classList.remove('active');
+                    if (item.getAttribute('href') === '#' + current) {
+                        item.parentElement.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
