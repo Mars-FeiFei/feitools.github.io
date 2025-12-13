@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FeiSharp 编译器错误和警告 - FeiSharp 文档</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        :root {
+            --primary-color: #0078d4;
+            --secondary-color: #2b579a;
+            --bg-color: #f6f6f6;
+            --sidebar-bg: #f3f2f1;
+            --border-color: #e1dfdd;
+            --text-color: #323130;
+            --code-bg: #f2f2f2;
+            --error-color: #d13438;
+            --warning-color: #ff8c00;
+            --info-color: #107c10;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        /* 顶部导航 */
+        .top-nav {
+            background-color: white;
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 20px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .top-nav .logo {
+            display: flex;
+            align-items: center;
+            margin-right: 30px;
+        }
+        
+        .logo-text {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-left: 8px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 14px;
+            padding: 5px 0;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+        
+        .nav-links a.active {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+        }
+        
+        /* 主容器 */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            gap: 40px;
+        }
+        
+        /* 左侧导航 */
+        .left-nav {
+            width: 280px;
+            background-color: white;
+            border-right: 1px solid var(--border-color);
+            padding: 20px 0;
+            position: sticky;
+            top: 60px;
+            height: calc(100vh - 60px);
+            overflow-y: auto;
+        }
+        
+        .left-nav-section {
+            margin-bottom: 25px;
+        }
+        
+        .left-nav-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            padding: 5px 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+        
+        .left-nav-list {
+            list-style: none;
+        }
+        
+        .left-nav-item {
+            padding: 6px 20px;
+        }
+        
+        .left-nav-item a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 14px;
+            display: block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        
+        .left-nav-item a:hover {
+            background-color: rgba(0, 120, 212, 0.1);
+            color: var(--primary-color);
+        }
+        
+        .left-nav-item.active a {
+            background-color: rgba(0, 120, 212, 0.15);
+            color: var(--primary-color);
+            font-weight: 500;
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        /* 主要内容 */
+        .main-content {
+            flex: 1;
+            padding: 30px 0;
+            max-width: 900px;
+        }
+        
+        .header {
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 42px;
+            font-weight: 300;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+        
+        .header-subtitle {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .header-description {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        /* 内容卡片 */
+        .content-section {
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 28px;
+            font-weight: 300;
+            margin-bottom: 25px;
+            color: var(--secondary-color);
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .subsection-title {
+            font-size: 24px;
+            font-weight: 300;
+            margin: 30px 0 20px;
+            color: var(--text-color);
+        }
+        
+        .subsection-subtitle {
+            font-size: 20px;
+            font-weight: 400;
+            margin: 25px 0 15px;
+            color: var(--text-color);
+        }
+        
+        /* 错误信息样式 */
+        .error-severity {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+        
+        .error-severity.error {
+            background-color: rgba(209, 52, 56, 0.1);
+            color: var(--error-color);
+            border: 1px solid rgba(209, 52, 56, 0.3);
+        }
+        
+        .error-severity.warning {
+            background-color: rgba(255, 140, 0, 0.1);
+            color: var(--warning-color);
+            border: 1px solid rgba(255, 140, 0, 0.3);
+        }
+        
+        .error-code {
+            font-family: 'Consolas', monospace;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .error-item {
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 25px;
+            margin-bottom: 25px;
+            background-color: white;
+        }
+        
+        .error-item-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .error-title {
+            font-size: 20px;
+            font-weight: 400;
+            color: var(--text-color);
+            flex: 1;
+        }
+        
+        .error-description {
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        /* 代码块 */
+        .code-block {
+            background-color: var(--code-bg);
+            border-radius: 4px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            border-left: 4px solid var(--border-color);
+        }
+        
+        .code-block-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .code-block-title {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        
+        .code-block pre {
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre;
+            tab-size: 4;
+        }
+        
+        .code-line-error {
+            background-color: rgba(209, 52, 56, 0.1);
+            border-left: 3px solid var(--error-color);
+            padding-left: 10px;
+        }
+        
+        /* 注释和提示 */
+        .note {
+            background-color: #fff4ce;
+            border-left: 4px solid #ffb900;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .note-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #8a6d3b;
+        }
+        
+        .warning {
+            background-color: #fed9cc;
+            border-left: 4px solid #d83b01;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .warning-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #a94442;
+        }
+        
+        .tip {
+            background-color: #e7f4ff;
+            border-left: 4px solid var(--primary-color);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .tip-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+        }
+        
+        /* 表格 */
+        .error-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .error-table th {
+            background-color: var(--sidebar-bg);
+            text-align: left;
+            padding: 12px 15px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .error-table td {
+            padding: 10px 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .error-table tr:hover {
+            background-color: rgba(0, 120, 212, 0.05);
+        }
+        
+        /* 右导航 */
+        .right-nav {
+            width: 280px;
+            padding-top: 30px;
+            position: sticky;
+            top: 60px;
+            height: calc(100vh - 60px);
+            overflow-y: auto;
+        }
+        
+        .right-nav-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+        
+        .right-nav-list {
+            list-style: none;
+        }
+        
+        .right-nav-item {
+            margin-bottom: 8px;
+        }
+        
+        .right-nav-item a {
+            text-decoration: none;
+            color: var(--primary-color);
+            font-size: 14px;
+            padding: 5px 0;
+            display: block;
+        }
+        
+        .right-nav-item a:hover {
+            text-decoration: underline;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .right-nav {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .left-nav {
+                width: 100%;
+                position: relative;
+                top: 0;
+                height: auto;
+                max-height: 300px;
+            }
+            
+            .top-nav .nav-links {
+                display: none;
+            }
+        }
+        
+        /* 搜索框 */
+        .search-box {
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        /* 错误编号 */
+        .error-id {
+            font-family: 'Consolas', monospace;
+            color: #666;
+            margin-left: 10px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航 -->
+    <nav class="top-nav">
+        <div class="logo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="#0078d4">
+                <path d="M12 2L2 7L12 12L22 7L12 2Z M2 17L12 22L22 17 M2 12L12 17L22 12"></path>
+            </svg>
+            <span class="logo-text">FeiSharp</span>
+        </div>
+        <div class="nav-links">
+            <a href="../parser.html">Parser 文档</a>
+            <a href="../lexer.html">Lexer 文档</a>
+            <a href="./index.html" class="active">错误分析</a>
+            <a href="../../index.html">API 参考</a>
+            <a href="../../index.html">示例</a>
+            <a href="../../download.html">下载</a>
+        </div>
+    </nav>
+    
+    <!-- 主容器 -->
+    <div class="container">
+        <!-- 左侧导航 -->
+        <nav class="left-nav">
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="搜索错误代码或描述...">
+            </div>
+            
+            <div class="left-nav-section">
+                <div class="left-nav-title">按类别</div>
+                <ul class="left-nav-list">
+                    <li class="left-nav-item active"><a href="#lexer-errors">词法分析错误</a></li>
+                    <li class="left-nav-item"><a href="#parser-errors">语法分析错误</a></li>
+                    <li class="left-nav-item"><a href="#semantic-errors">语义错误</a></li>
+                    <li class="left-nav-item"><a href="#runtime-errors">运行时错误</a></li>
+                    <li class="left-nav-item"><a href="#warnings">编译器警告</a></li>
+                </ul>
+            </div>
+            
+            <div class="left-nav-section">
+                <div class="left-nav-title">常见错误</div>
+                <ul class="left-nav-list">
+                    <li class="left-nav-item"><a href="#fs1001">FS1001: 无效字符</a></li>
+                    <li class="left-nav-item"><a href="#fs1002">FS1002: 未终止的字符串</a></li>
+                    <li class="left-nav-item"><a href="#fs1003">FS1003: 无效的数字格式</a></li>
+                    <li class="left-nav-item"><a href="#fs2001">FS2001: 缺少分号</a></li>
+                    <li class="left-nav-item"><a href="#fs2002">FS2002: 括号不匹配</a></li>
+                    <li class="left-nav-item"><a href="#fs2003">FS2003: 无效的语法</a></li>
+                    <li class="left-nav-item"><a href="#fs3001">FS3001: 未定义的变量</a></li>
+                    <li class="left-nav-item"><a href="#fs3002">FS3002: 类型不匹配</a></li>
+                </ul>
+            </div>
+            
+            <div class="left-nav-section">
+                <div class="left-nav-title">相关链接</div>
+                <ul class="left-nav-list">
+                    <li class="left-nav-item"><a href="#">FeiSharp 语言参考</a></li>
+                    <li class="left-nav-item"><a href="#">FeiSharp 编译器选项</a></li>
+                    <li class="left-nav-item"><a href="#">FeiSharp 编程指南</a></li>
+                    <li class="left-nav-item"><a href="#">报告问题</a></li>
+                </ul>
+            </div>
+        </nav>
+        
+        <!-- 主要内容 -->
+        <main class="main-content">
+            <div class="header">
+                <h1>FeiSharp 编译器错误和警告</h1>
+                <div class="header-subtitle">FeiSharp 版本 8.0</div>
+                <div class="header-description">
+                    <p>此文档列出了 FeiSharp 编译器生成的所有错误和警告。错误代码以 "FS" 开头，后跟四位数字。第一位数字表示错误类别：</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>1xxx</strong>: 词法分析错误（Lexer 错误）</li>
+                        <li><strong>2xxx</strong>: 语法分析错误（Parser 错误）</li>
+                        <li><strong>3xxx</strong>: 语义错误</li>
+                        <li><strong>4xxx</strong>: 运行时错误</li>
+                        <li><strong>5xxx</strong>: 编译器警告</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 词法分析错误 -->
+            <section id="lexer-errors" class="content-section">
+                <h2 class="section-title">词法分析错误 (1xxx)</h2>
+                <p>这些错误在词法分析阶段发生，当 Lexer 无法将源代码字符转换为有效的词法单元时触发。</p>
+                
+                <!-- FS1001 -->
+                <div id="fs1001" class="error-item">
+                    <div class="error-item-header">
+                        <span class="error-severity error">错误</span>
+                        <h3 class="error-title">FS1001: 无效字符</h3>
+                        <span class="error-id">FS1001</span>
+                    </div>
+                    
+                    <div class="error-description">
+                        <p>Lexer 遇到了无法识别的字符。</p>
+                        <p><strong>原因:</strong> 源代码中包含 Lexer 无法处理的字符（如特殊符号、控制字符或不受支持的Unicode字符）。</p>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-block-header">
+                            <div class="code-block-title">示例代码</div>
+                        </div>
+                        <pre>var x = 10;
+var y = 20 @ 30;  // 错误：@ 是无效字符
+print(x + y);</pre>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-block-header">
+                            <div class="code-block-title">控制台输出</div>
+                        </div>
+                        <pre><span class="code-line-error">错误 FS1001: 第2行，位置12: 无效字符 '@'</span>
+Unexpected character: @, it will be skipped</pre>
+                    </div>
+                    
+                    <div class="tip">
+                        <div class="tip-title">解决方法</div>
+                        <p>删除或替换无效字符。如果确实需要使用特殊字符，请确保它被包含在字符串字面量中：</p>
+                        <div class="code-block">
+                            <pre>var message = "符号 @ 可以在字符串中使用";
+print(message);</pre>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- FS1002 -->
+                <div id="fs1002" class="error-item">
+                    <div class="error-item-header">
+                        <span class="error-severity error">错误</span>
+                        <h3 class="error-title">FS1002: 未终止的字符串字面量</h3>
+                        <span class="error-id">FS1002</span>
+                    </div>
+                    
+                    <div class="error-description">
+                        <p>字符串字面量缺少结束引号。</p>
+                        <p><strong>原因:</strong> 双引号字符串没有以匹配的双引号结束。</p>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-block-header">
+                            <div class="code-block-title">示例代码</div>
+                        </div>
+                        <pre>var message = "这是一个未终止的字符串;
+print(message);</pre>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-block-header">
+                            <div class="code-block-title">控制台输出</div>
+                        </div>
+                        <pre><span class="code-line-error">错误 FS1002: 第1行: 未终止的字符串字面量</span></pre>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">注意</div>
+                        <p>Lexer 会一直读取字符直到遇到结束引号或文件结束。这可能导致后续代码被错误地解析为字符串的一部分。</p>
+                    </div>
+                </div>
+                
+                <!-- FS1003 -->
+                <div id="fs1003" class="error-item">
+                    <div class="error-item-header">
+                        <span class="error-severity error">错误</span>
+                        <h3 class="error-title">FS1003: 无效的数字格式</h3>
+                        <span class="error-id">FS1003</span>
+                    </div>
+                    
+                    <div class="error-description">
+                        <p>数字字面量格式不正确。</p>
+                        <p><strong>原因:</strong> 数字包含多个小数点或包含非数字字符。</p>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-block-header">
+                            <div class="code-block-title">示例代码</div>
+                        </div>
+                        <pre>var a = 3.14.15;    // 错误：多个小数点
+var b = 123abc;     // 错误：数字中包含字母
+var c = 1.2.3;      // 错误：无效的数字格式</pre>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-block-header">
+                            <div class="code-block-title">控制台输出</div>
+                        </div>
+                        <pre><span class="code-line-error">错误 FS1003: 第1行，位置10: 无效的数字格式 '3.14.15'</span>
+<span class="code-line-error">错误 FS1003: 第2行，位置10: 无效的数字格式 '123abc'</span></pre>
+                    </div>
+                </div>
+                
+                <!-- FS1004 -->
+                <div id="fs1004" class="error-item">
+                    <div class="error-item-header">
+                        <span class="error-severity warning">警告</span>
+                        <h3 class="error-title">FS1004: 未知字符警告</h3>
+                        <span class="error-id">FS1004</span>
+                    </div>
+                    
+                    <div class="error-description">
+                        <p>Lexer 遇到了不受支持的字符，但选择跳过它继续解析。</p>
+                        <p><strong>原因:</strong> 这是 Lexer 的错误处理机制，当遇到无法识别的字符时会输出警告并跳过该字符。</p>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-block-header">
+                            <div class="code-block-title">示例代码</div>
+                        </div>
+                        <pre>var x = 10;
+# 这是一个注释，但 # 不是合法的注释符号
+print(x);</pre>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-block-header">
+                            <div class="code-block-title">控制台输出</div>
+                        </div>
+                        <pre><span class="code-line-error">警告 FS1004: 第2行，位置1: 未知字符 '#'，已跳过</span>
+Unexpected character: #, it will be skipped</pre>
+                    </div>
+                    
+                    <div class="tip">
+                        <div class="tip-title">Lexer 源代码实现</div>
+                        <p>在 Lexer 的 NextToken() 方法中，当所有已知字符模式都不匹配时：</p>
+                        <div class="code-block">
+                            <pre>// Lexer.cs - 错误处理部分
+Console.WriteLine("Unexpected character: " + current + ", it will be skipped");
+_index++;</pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 语法分析错误 -->
+            <section id="parser-errors" class="content-section">
+                <h2 class="section-title">语法分析错误 (2xxx)</h2>
+                <p>这些错误在语法分析阶段发生，当 Parser 无法根据语法规则构建语法树时触发。</p>
+                
+                <!-- FS2001 -->
+                <div id="fs2001" class="error-item">
+                    <div class="error-item-header">
+                        <span class="error-severity error">错误</span>
+                        <h3 class="error-title">FS2001: 缺少分号</h3>
+                        <span class="error-id">FS2001</span>
+                    </div>
+                    
+                    <div class="error-description">
+                        <p>语句缺少结束分号。</p>
+                        <p><strong>原因:</strong> FeiSharp 要求大多数语句以分号结束。</p>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-block-header">
+                            <div class="code-block-title">示例代码</div>
+                        </div>
+                        <pre>var x = 10  // 错误：缺少分号
+var y = 20;
+print(x + y)</pre>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-block-header">
+                            <div class="code-block-title">控制台输出</div>
+                        </div>
+                        <pre><span class="code-line-error">错误 FS2001: 第1行: 语句缺少分号</span>
+<span class="code-line-error">错误 FS2001: 第3行: 语句缺少分号</span></pre>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">语法规则</div>
+                        <p>需要分号的语句包括：变量声明、赋值语句、函数调用、表达式语句等。</p>
+                    </div>
+                </div>
+                
+                <!-- FS2002 -->
+                <div id="fs2002" class="error-item">
+                    <div class="error-item-header">
+                        <span class="error-severity error">错误</span>
+                        <h3 class="error-title">FS2002: 括号不匹配</h3>
+                        <span class="error-id">FS2002</span>
+                    </div>
+                    
+                    <div class="error-description">
+                        <p>圆括号、方括号或花括号不匹配。</p>
+                        <p><strong>原因:</strong> 左括号没有对应的右括号，或者括号类型不匹配。</p>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-block-header">
+                            <div class="code-block-title">示例代码</div>
+                        </div>
+                        <pre>var result = (10 + 5 * 2;  // 错误：缺少右括号
+if x > 5 {               // 错误：条件缺少括号
+    print("大于5");
+]                       // 错误：错误的括号类型</pre>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-block-header">
+                            <div class="code-block-title">控制台输出</div>
+                        </div>
+                        <pre><span class="code-line-error">错误 FS2002: 第1行: 缺少 ')'</span>
+<span class="code-line-error">错误 FS2002: 第2行: 条件表达式缺少 '('</span>
+<span class="code-line-error">错误 FS2002: 第4行: 意外的 ']'，期望 '}'</span></pre>
+                    </div>
+                    
+                    <div class="tip">
+                        <div class="tip-title">Parser 实现参考</div>
+                        <p>Parser 使用栈来跟踪括号匹配：</p>
+                        <div class="code-block">
+                            <pre>// Parser.cs - 括号匹配逻辑
+private void ExpectPunctuation(string expected)
+{
+    var token = GetCurrentToken();
+    if (token.Value != expected)
+    {
+        throw new ParseException($"期望 '{expected}'，但找到 '{token.Value}'");
+    }
+    Advance();
+}</pre>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- FS2003 -->
+                <div id="fs2003" class="error-item">
+                    <div class="error-item-header">
+                        <span class="error-severity error">错误</span>
+                        <h3 class="error-title">FS2003: 无效的语法</h3>
+                        <span class="error-id">FS2003</span>
+                    </div>
+                    
+                    <div class="error-description">
+                        <p>代码不符合 FeiSharp 语法规则。</p>
+                        <p><strong>原因:</strong> 语句结构不正确，或者使用了不支持的语法结构。</p>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-block-header">
+                            <div class="code-block-title">示例代码</div>
+                        </div>
+                        <pre>var = 10;              // 错误：缺少变量名
+function add a, b)    // 错误：缺少左括号
+    return a + b;
+fend;
+
+if x > 5 then         // 错误：无效的 if 语法
+    print(x);
+iend;</pre>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-block-header">
+                            <div class="code-block-title">控制台输出</div>
+                        </div>
+                        <pre><span class="code-line-error">错误 FS2003: 第1行: 无效的变量声明语法</span>
+<span class="code-line-error">错误 FS2003: 第2行: 期望 '('</span>
+<span class="code-line-error">错误 FS2003: 第6行: 无效的条件语句语法</span></pre>
+                    </div>
+                </div>
+                
+                <!-- FS2004 -->
+                <div id="fs2004" class="error-item">
+                    <div class="error-item-header">
+                        <span class="error-severity error">错误</span>
+                        <h3 class="error-title">FS2004: 无效的块结构</h3>
+                        <span class="error-id">FS2004</span>
+                    </div>
+                    
+                    <div class="error-description">
+                        <p>代码块结构不正确。</p>
+                        <p><strong>原因:</strong> FeiSharp 使用特定的关键字标记代码块开始和结束（如 fbegin/fend, ibegin/iend, wbegin/wend）。</p>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-block-header">
+                            <div class="code-block-title">示例代码</div>
+                        </div>
+                        <pre>function add(a, b)
+begin:           // 错误：应该是 fbegin
+    return a + b;
+end;            // 错误：应该是 fend
+
+if (x > 5)
+ibegin:
+    print(x);
+wend;           // 错误：应该是 iend</pre>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-block-header">
+                            <div class="code-block-title">控制台输出</div>
+                        </div>
+                        <pre><span class="code-line-error">错误 FS2004: 第2行: 期望 'fbegin'</span>
+<span class="code-line-error">错误 FS2004: 第4行: 期望 'fend'</span>
+<span class="code-line-error">错误 FS2004: 第9行: 期望 'iend'，但找到 'wend'</span></pre>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 语义错误 -->
+            <section id="semantic-errors" class="content-section">
+                <h2 class="section-title">语义错误 (3xxx)</h2>
+                <p>这些错误在语义分析阶段发生，代码语法正确但含义有问题。</p>
+                
+                <!-- FS3001 -->
+                <div id="fs3001" class="error-item">
+                    <div class="error-item-header">
+                        <span class="error-severity error">错误</span>
+                        <h3 class="error-title">FS3001: 未定义的变量</h3>
+                        <span class="error-id">FS3001</span>
+                    </div>
+                    
+                    <div class="error-description">
+                        <p>使用了未声明的变量。</p>
+                        <p><strong>原因:</strong> 变量在使用前没有用 <code>var</code> 关键字声明。</p>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-block-header">
+                            <div class="code-block-title">示例代码</div>
+                        </div>
+                        <pre>x = 10;             // 错误：x 未定义
+print(y);          // 错误：y 未定义
+
+var z = a + b;     // 错误：a 和 b 未定义</pre>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-block-header">
+                            <div class="code-block-title">控制台输出</div>
+                        </div>
+                        <pre><span class="code-line-error">错误 FS3001: 第1行: 未定义的变量 'x'</span>
+<span class="code-line-error">错误 FS3001: 第2行: 未定义的变量 'y'</span>
+<span class="code-line-error">错误 FS3001: 第4行: 未定义的变量 'a'</span>
+<span class="code-line-error">错误 FS3001: 第4行: 未定义的变量 'b'</span></pre>
+                    </div>
+                    
+                    <div class="tip">
+                        <div class="tip-title">正确的变量使用</div>
+                        <p>所有变量必须先声明后使用：</p>
+                        <div class="code-block">
+                            <pre>var x = 10;        // 正确：声明并初始化
+var y;             // 正确：声明（需要后续初始化）
+init(y, Number);   // 初始化
+print(x + y);      // 正确：使用已声明的变量</pre>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- FS3002 -->
+                <div id="fs3002" class="error-item">
+                    <div class="error-item-header">
+                        <span class="error-severity error">错误</span>
+                        <h3 class="error-title">FS3002: 类型不匹配</h3>
+                        <span class="error-id">FS3002</span>
+                    </div>
+                    
+                    <div class="error-description">
+                        <p>操作或赋值中的类型不兼容。</p>
+                        <p><strong>原因:</strong> FeiSharp 是动态类型语言，但某些操作要求类型兼容。</p>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-block-header">
+                            <div class="code-block-title">示例代码</div>
+                        </div>
+                        <pre>var x = "字符串";
+var y = 10;
+var z = x + y;     // 可能产生警告：字符串和数字相加
+
+var a = true;
+var b = a + 1;     // 错误：布尔值和数字不能相加</pre>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-block-header">
+                            <div class="code-block-title">控制台输出</div>
+                        </div>
+                        <pre><span class="code-line-error">警告 FS5001: 第3行: 字符串和数字相加，结果将被转换为字符串</span>
+<span class="code-line-error">错误 FS3002: 第6行: 类型不匹配，不能将数字加到布尔值</span></pre>
+                    </div>
+                </div>
+                
+                <!-- FS3003 -->
+                <div id="fs3003" class="error-item">
+                    <div class="error-item-header">
+                        <span class="error-severity error">错误</span>
+                        <h3 class="error-title">FS3003: 函数参数数量不匹配</h3>
+                        <span class="error-id">FS3003</span>
+                    </div>
+                    
+                    <div class="error-description">
+                        <p>函数调用提供的参数数量与函数定义不匹配。</p>
+                        <p><strong>原因:</strong> 调用函数时传递了错误数量的参数。</p>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-block-header">
+                            <div class="code-block-title">示例代码</div>
+                        </div>
+                        <pre>function add(a, b)
+fbegin:
+    return a + b;
+fend;
+
+var result1 = add(5);          // 错误：缺少一个参数
+var result2 = add(1, 2, 3);    // 错误：多了一个参数</pre>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-block-header">
+                            <div class="code-block-title">控制台输出</div>
+                        </div>
+                        <pre><span class="code-line-error">错误 FS3003: 第7行: 函数 'add' 期望 2 个参数，但提供了 1 个</span>
+<span class="code-line-error">错误 FS3003: 第8行: 函数 'add' 期望 2 个参数，但提供了 3 个</span></pre>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 运行时错误 -->
+            <section id="runtime-errors" class="content-section">
+                <h2 class="section-title">运行时错误 (4xxx)</h2>
+                <p>这些错误在代码执行期间发生。</p>
+                
+                <!-- FS4001 -->
+                <div id="fs4001" class="error-item">
+                    <div class="error-item-header">
+                        <span class="error-severity error">错误</span>
+                        <h3 class="error-title">FS4001: 除零错误</h3>
+                        <span class="error-id">FS4001</span>
+                    </div>
+                    
+                    <div class="error-description">
+                        <p>试图除以零。</p>
+                        <p><strong>原因:</strong> 除法运算的除数为零。</p>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-block-header">
+                            <div class="code-block-title">示例代码</div>
+                        </div>
+                        <pre>var x = 10;
+var y = 0;
+var z = x / y;     // 运行时错误：除零</pre>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-block-header">
+                            <div class="code-block-title">控制台输出</div>
+                        </div>
+                        <pre><span class="code-line-error">运行时错误 FS4001: 除零错误</span>
+   at line 3: var z = x / y;</pre>
+                    </div>
+                    
+                    <div class="tip">
+                        <div class="tip-title">预防措施</div>
+                        <p>在执行除法前检查除数：</p>
+                        <div class="code-block">
+                            <pre>var x = 10;
+var y = 0;
+if (y != 0)
+ibegin:
+    var z = x / y;
+iend:
+else
+ibegin:
+    print("除数不能为零");
+iend;</pre>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- FS4002 -->
+                <div id="fs4002" class="error-item">
+                    <div class="error-item-header">
+                        <span class="error-severity error">错误</span>
+                        <h3 class="error-title">FS4002: 空引用错误</h3>
+                        <span class="error-id">FS4002</span>
+                    </div>
+                    
+                    <div class="error-description">
+                        <p>试图访问 null 值的成员或调用 null 值的函数。</p>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-block-header">
+                            <div class="code-block-title">示例代码</div>
+                        </div>
+                        <pre>var obj = null;
+var value = obj.property;     // 运行时错误：空引用</pre>
+                    </div>
+                </div>
+                
+                <!-- FS4003 -->
+                <div id="fs4003" class="error-item">
+                    <div class="error-item-header">
+                        <span class="error-severity error">错误</span>
+                        <h3 class="error-title">FS4003: 索引越界</h3>
+                        <span class="error-id">FS4003</span>
+                    </div>
+                    
+                    <div class="error-description">
+                        <p>数组或字符串索引超出有效范围。</p>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-block-header">
+                            <div class="code-block-title">示例代码</div>
+                        </div>
+                        <pre>var arr = [1, 2, 3];
+var value = arr[5];           // 运行时错误：索引越界</pre>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 编译器警告 -->
+            <section id="warnings" class="content-section">
+                <h2 class="section-title">编译器警告 (5xxx)</h2>
+                <p>这些是编译器警告，代码可以编译和执行，但可能存在潜在问题。</p>
+                
+                <!-- FS5001 -->
+                <div id="fs5001" class="error-item">
+                    <div class="error-item-header">
+                        <span class="error-severity warning">警告</span>
+                        <h3 class="error-title">FS5001: 隐式类型转换</h3>
+                        <span class="error-id">FS5001</span>
+                    </div>
+                    
+                    <div class="error-description">
+                        <p>编译器检测到可能不安全的隐式类型转换。</p>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-block-header">
+                            <div class="code-block-title">示例代码</div>
+                        </div>
+                        <pre>var x = "100";
+var y = x + 50;     // 警告：字符串和数字相加</pre>
+                    </div>
+                </div>
+                
+                <!-- FS5002 -->
+                <div id="fs5002" class="error-item">
+                    <div class="error-item-header">
+                        <span class="error-severity warning">警告</span>
+                        <h3 class="error-title">FS5002: 未使用的变量</h3>
+                        <span class="error-id">FS5002</span>
+                    </div>
+                    
+                    <div class="error-description">
+                        <p>声明了变量但从未使用。</p>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-block-header">
+                            <div class="code-block-title">示例代码</div>
+                        </div>
+                        <pre>var unused = 10;    // 警告：变量未使用
+var x = 5;
+print(x);</pre>
+                    </div>
+                </div>
+                
+                <!-- FS5003 -->
+                <div id="fs5003" class="error-item">
+                    <div class="error-item-header">
+                        <span class="error-severity warning">警告</span>
+                        <h3 class="error-title">FS5003: 缺少返回值</h3>
+                        <span class="error-id">FS5003</span>
+                    </div>
+                    
+                    <div class="error-description">
+                        <p>函数可能在某些路径下没有返回值。</p>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-block-header">
+                            <div class="code-block-title">示例代码</div>
+                        </div>
+                        <pre>function check(x)
+fbegin:
+    if (x > 0)
+    ibegin:
+        return true;
+    iend:
+    // 警告：如果 x <= 0，函数没有返回值
+fend;</pre>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 错误代码参考表 -->
+            <section class="content-section">
+                <h2 class="section-title">错误代码快速参考</h2>
+                
+                <table class="error-table">
+                    <thead>
+                        <tr>
+                            <th>错误代码</th>
+                            <th>严重性</th>
+                            <th>描述</th>
+                            <th>类别</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><a href="#fs1001">FS1001</a></td>
+                            <td><span class="error-severity error">错误</span></td>
+                            <td>无效字符</td>
+                            <td>词法分析</td>
+                        </tr>
+                        <tr>
+                            <td><a href="#fs1002">FS1002</a></td>
+                            <td><span class="error-severity error">错误</span></td>
+                            <td>未终止的字符串字面量</td>
+                            <td>词法分析</td>
+                        </tr>
+                        <tr>
+                            <td><a href="#fs1003">FS1003</a></td>
+                            <td><span class="error-severity error">错误</span></td>
+                            <td>无效的数字格式</td>
+                            <td>词法分析</td>
+                        </tr>
+                        <tr>
+                            <td><a href="#fs1004">FS1004</a></td>
+                            <td><span class="error-severity warning">警告</span></td>
+                            <td>未知字符警告</td>
+                            <td>词法分析</td>
+                        </tr>
+                        <tr>
+                            <td><a href="#fs2001">FS2001</a></td>
+                            <td><span class="error-severity error">错误</span></td>
+                            <td>缺少分号</td>
+                            <td>语法分析</td>
+                        </tr>
+                        <tr>
+                            <td><a href="#fs2002">FS2002</a></td>
+                            <td><span class="error-severity error">错误</span></td>
+                            <td>括号不匹配</td>
+                            <td>语法分析</td>
+                        </tr>
+                        <tr>
+                            <td><a href="#fs2003">FS2003</a></td>
+                            <td><span class="error-severity error">错误</span></td>
+                            <td>无效的语法</td>
+                            <td>语法分析</td>
+                        </tr>
+                        <tr>
+                            <td><a href="#fs2004">FS2004</a></td>
+                            <td><span class="error-severity error">错误</span></td>
+                            <td>无效的块结构</td>
+                            <td>语法分析</td>
+                        </tr>
+                        <tr>
+                            <td><a href="#fs3001">FS3001</a></td>
+                            <td><span class="error-severity error">错误</span></td>
+                            <td>未定义的变量</td>
+                            <td>语义分析</td>
+                        </tr>
+                        <tr>
+                            <td><a href="#fs3002">FS3002</a></td>
+                            <td><span class="error-severity error">错误</span></td>
+                            <td>类型不匹配</td>
+                            <td>语义分析</td>
+                        </tr>
+                        <tr>
+                            <td><a href="#fs3003">FS3003</a></td>
+                            <td><span class="error-severity error">错误</span></td>
+                            <td>函数参数数量不匹配</td>
+                            <td>语义分析</td>
+                        </tr>
+                        <tr>
+                            <td><a href="#fs4001">FS4001</a></td>
+                            <td><span class="error-severity error">错误</span></td>
+                            <td>除零错误</td>
+                            <td>运行时</td>
+                        </tr>
+                        <tr>
+                            <td><a href="#fs5001">FS5001</a></td>
+                            <td><span class="error-severity warning">警告</span></td>
+                            <td>隐式类型转换</td>
+                            <td>编译器警告</td>
+                        </tr>
+                        <tr>
+                            <td><a href="#fs5002">FS5002</a></td>
+                            <td><span class="error-severity warning">警告</span></td>
+                            <td>未使用的变量</td>
+                            <td>编译器警告</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+        
+        <!-- 右导航 -->
+        <aside class="right-nav">
+            <div class="right-nav-title">本页内容</div>
+            <ul class="right-nav-list">
+                <li class="right-nav-item"><a href="#lexer-errors">词法分析错误</a></li>
+                <li class="right-nav-item"><a href="#fs1001">• FS1001: 无效字符</a></li>
+                <li class="right-nav-item"><a href="#fs1002">• FS1002: 未终止的字符串</a></li>
+                <li class="right-nav-item"><a href="#fs1003">• FS1003: 无效数字格式</a></li>
+                <li class="right-nav-item"><a href="#parser-errors">语法分析错误</a></li>
+                <li class="right-nav-item"><a href="#fs2001">• FS2001: 缺少分号</a></li>
+                <li class="right-nav-item"><a href="#fs2002">• FS2002: 括号不匹配</a></li>
+                <li class="right-nav-item"><a href="#fs2003">• FS2003: 无效语法</a></li>
+                <li class="right-nav-item"><a href="#semantic-errors">语义错误</a></li>
+                <li class="right-nav-item"><a href="#fs3001">• FS3001: 未定义变量</a></li>
+                <li class="right-nav-item"><a href="#fs3002">• FS3002: 类型不匹配</a></li>
+                <li class="right-nav-item"><a href="#runtime-errors">运行时错误</a></li>
+                <li class="right-nav-item"><a href="#warnings">编译器警告</a></li>
+            </ul>
+            
+            <div style="margin-top: 30px;">
+                <div class="right-nav-title">相关资源</div>
+                <ul class="right-nav-list">
+                    <li class="right-nav-item"><a href="#">FeiSharp 语言规范</a></li>
+                    <li class="right-nav-item"><a href="#">编译器选项</a></li>
+                    <li class="right-nav-item"><a href="#">调试 FeiSharp 代码</a></li>
+                    <li class="right-nav-item"><a href="#">报告编译器错误</a></li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+    
+    <script>
+        // 平滑滚动和导航高亮
+        document.addEventListener('DOMContentLoaded', function() {
+            // 左侧导航点击
+            const leftNavItems = document.querySelectorAll('.left-nav-item a');
+            const rightNavItems = document.querySelectorAll('.right-nav-item a');
+            const sections = document.querySelectorAll('.content-section');
+            const errorItems = document.querySelectorAll('.error-item');
+            
+            // 合并所有导航项
+            const allNavItems = [...leftNavItems, ...rightNavItems];
+            
+            // 导航点击事件
+            allNavItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // 移除所有active类
+                    leftNavItems.forEach(nav => {
+                        nav.parentElement.classList.remove('active');
+                    });
+                    
+                    // 添加active类
+                    if (this.parentElement.classList.contains('left-nav-item')) {
+                        this.parentElement.classList.add('active');
+                    }
+                    
+                    // 滚动到对应部分
+                    const targetId = this.getAttribute('href');
+                    if (targetId && targetId !== '#') {
+                        const targetElement = document.querySelector(targetId);
+                        if (targetElement) {
+                            window.scrollTo({
+                                top: targetElement.offsetTop - 80,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                });
+            });
+            
+            // 滚动时更新导航高亮
+            window.addEventListener('scroll', function() {
+                let current = '';
+                
+                // 先检查具体的错误项
+                errorItems.forEach(item => {
+                    const itemTop = item.offsetTop;
+                    const itemHeight = item.clientHeight;
+                    
+                    if (scrollY >= itemTop - 100 && scrollY < itemTop + itemHeight - 100) {
+                        current = item.getAttribute('id');
+                    }
+                });
+                
+                // 如果没有匹配的错误项，检查节
+                if (!current) {
+                    sections.forEach(section => {
+                        const sectionTop = section.offsetTop;
+                        const sectionHeight = section.clientHeight;
+                        
+                        if (scrollY >= sectionTop - 100) {
+                            current = section.getAttribute('id');
+                        }
+                    });
+                }
+                
+                // 更新左侧导航
+                leftNavItems.forEach(item => {
+                    item.parentElement.classList.remove('active');
+                    const href = item.getAttribute('href');
+                    if (href === '#' + current || (current && href.includes(current))) {
+                        item.parentElement.classList.add('active');
+                    }
+                });
+            });
+            
+            // 搜索功能
+            const searchInput = document.querySelector('.search-input');
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    const searchTerm = this.value.toLowerCase().trim();
+                    
+                    if (searchTerm.length < 2) {
+                        // 显示所有项
+                        leftNavItems.forEach(item => {
+                            item.parentElement.style.display = 'block';
+                        });
+                        return;
+                    }
+                    
+                    // 过滤导航项
+                    leftNavItems.forEach(item => {
+                        const text = item.textContent.toLowerCase();
+                        const href = item.getAttribute('href');
+                        const targetElement = document.querySelector(href);
+                        
+                        let shouldShow = text.includes(searchTerm);
+                        
+                        // 如果导航文本不匹配，检查目标内容
+                        if (!shouldShow && targetElement) {
+                            const content = targetElement.textContent.toLowerCase();
+                            shouldShow = content.includes(searchTerm);
+                        }
+                        
+                        item.parentElement.style.display = shouldShow ? 'block' : 'none';
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
