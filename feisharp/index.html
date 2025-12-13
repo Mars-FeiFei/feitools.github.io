@@ -677,36 +677,40 @@
                     </div>
                 </div>
                 <div class="code-content">
-                    <pre><code>// FeiSharp 示例脚本
-// 变量声明和基本运算
+                    <pre><code>// FeiSharp 示例脚本;
+import "$math.fsc";
+// 变量声明和基本运算;
 var name = "FeiSharp";
 var version = 8.0;
 
-// 输出到控制台
+// 输出到控制台;
 print("欢迎使用 " + name + " 版本 " + version);
 
-// 条件判断
-if(version > 7.0) {
+// 条件判断;
+if(version > 7.0) 
+ibegin:
     print("这是最新版本！");
-} iend
+iend;
 
-// 循环示例
+// 循环示例;
 var count = 1;
-while(count <= 5) {
+while(count <= 5)
+wbegin:
     print("计数: " + count);
     set("count", count + 1);
-} wend
+wend;
 
-// 函数定义和调用
-func greet(person) {
-    _return "你好, " + person + "!";
-} fend
+// 函数定义和调用;
+function greet(person)
+fbegin:
+    return "你好, " + person + "!";
+fend;
 
 var message = greet("开发者");
 print(message);
 
-// 数学计算
-pow("result", 2, 10);  // 计算 2 的 10 次方
+// 数学计算;
+var result = pow(2, 10);  // 计算 2 的 10 次方;
 print("2^10 = " + result);</code></pre>
                 </div>
             </div>
@@ -724,7 +728,10 @@ print("2^10 = " + result);</code></pre>
         <div class="container">
             <div class="section-header">
                 <h2>文档与资源</h2>
-                <p>探索 FeiSharp 的完整功能和 API 参考</p>
+                <p>探索 FeiSharp Parser 的 API 参考</p>
+                <br/>
+                <p>探索 FeiSharp Lexer 的 API 参考</p>
+
             </div>
             
             <div class="docs-cards">
@@ -738,9 +745,23 @@ print("2^10 = " + result);</code></pre>
                         <a href="documents/parser.html" class="doc-link">
                             查看文档 <i class="fas fa-arrow-right"></i>
                         </a>
+                        
                     </div>
                 </div>
                 
+                <div class="doc-card">
+                    <div class="doc-icon">
+                        <i class="fas fa-file-code">
+                        </i>
+                    </div>
+                    <div class="doc-content">
+                        <h3>Lexer 文档</h3>
+                        <p>深入了解 FeiSharp 语法解释器的内部工作原理、API和执行机制。</p>
+                        <a href="documents/lexer.html" class="doc-link">
+                            查看文档 <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
                 <div class="doc-card">
                     <div class="doc-icon">
                         <i class="fas fa-graduation-cap"></i>

@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FeiSharp Lexer 文档</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        :root {
+            --primary-color: #0078d4;
+            --secondary-color: #2b579a;
+            --bg-color: #f6f6f6;
+            --sidebar-bg: #f3f2f1;
+            --border-color: #e1dfdd;
+            --text-color: #323130;
+            --code-bg: #f2f2f2;
+        }
+        
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+        
+        /* 侧边栏导航 */
+        .sidebar {
+            width: 280px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+        }
+        
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .sidebar h1 {
+            font-size: 20px;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-subtitle {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .nav-section {
+            padding: 15px 0;
+        }
+        
+        .nav-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            padding: 5px 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .nav-list {
+            list-style: none;
+        }
+        
+        .nav-item {
+            padding: 8px 20px;
+        }
+        
+        .nav-item a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 14px;
+            display: block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        
+        .nav-item a:hover {
+            background-color: rgba(0, 120, 212, 0.1);
+            color: var(--primary-color);
+        }
+        
+        .nav-item.active a {
+            background-color: rgba(0, 120, 212, 0.15);
+            color: var(--primary-color);
+            font-weight: 500;
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        /* 主内容区 */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 40px;
+            max-width: 1200px;
+        }
+        
+        .header {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 36px;
+            font-weight: 300;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .breadcrumb {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .breadcrumb a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .breadcrumb span {
+            margin: 0 5px;
+        }
+        
+        /* 内容卡片 */
+        .content-section {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 24px;
+            font-weight: 400;
+            margin-bottom: 20px;
+            color: var(--secondary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+        
+        .subsection-title {
+            font-size: 20px;
+            font-weight: 400;
+            margin: 25px 0 15px;
+            color: var(--text-color);
+        }
+        
+        .code-block {
+            background-color: var(--code-bg);
+            border-radius: 4px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .code-block pre {
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+        
+        .syntax-block {
+            background-color: #f8f9fa;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .token-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .token-table th {
+            background-color: var(--sidebar-bg);
+            text-align: left;
+            padding: 12px 15px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .token-table td {
+            padding: 10px 15px;
+            border-bottom: 1px solid var(--border-color);
+            font-family: 'Consolas', monospace;
+            font-size: 13px;
+        }
+        
+        .token-table tr:hover {
+            background-color: rgba(0, 120, 212, 0.05);
+        }
+        
+        .note {
+            background-color: #fff4ce;
+            border-left: 4px solid #ffb900;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        
+        .warning {
+            background-color: #fed9cc;
+            border-left: 4px solid #d83b01;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        
+        .example {
+            background-color: #e7f4ff;
+            border-left: 4px solid var(--primary-color);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        
+        .example-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .token-category {
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 240px;
+            }
+            
+            .main-content {
+                margin-left: 240px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                max-height: 300px;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 侧边栏导航 -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h1>FeiSharp Lexer</h1>
+            <div class="sidebar-subtitle">版本 8.0</div>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-title">概述</div>
+            <ul class="nav-list">
+                <li class="nav-item active"><a href="#overview">Lexer 概述</a></li>
+                <li class="nav-item"><a href="#architecture">架构设计</a></li>
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-title">词法单元</div>
+            <ul class="nav-list">
+                <li class="nav-item"><a href="#token-types">Token 类型</a></li>
+                <li class="nav-item"><a href="#punctuation">标点符号</a></li>
+                <li class="nav-item"><a href="#operators">运算符</a></li>
+                <li class="nav-item"><a href="#literals">字面量</a></li>
+                <li class="nav-item"><a href="#identifiers">标识符</a></li>
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-title">解析规则</div>
+            <ul class="nav-list">
+                <li class="nav-item"><a href="#parsing-rules">解析流程</a></li>
+                <li class="nav-item"><a href="#keyword-recognition">关键字识别</a></li>
+                <li class="nav-item"><a href="#error-handling">错误处理</a></li>
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-title">使用示例</div>
+            <ul class="nav-list">
+                <li class="nav-item"><a href="#basic-usage">基础用法</a></li>
+                <li class="nav-item"><a href="#advanced-examples">高级示例</a></li>
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-title">API 参考</div>
+            <ul class="nav-list">
+                <li class="nav-item"><a href="#constructor">构造函数</a></li>
+                <li class="nav-item"><a href="#methods">方法列表</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- 主内容区 -->
+    <main class="main-content">
+        <div class="header">
+            <h1>FeiSharp Lexer 文档</h1>
+            <div class="breadcrumb">
+                <a href="#">FeiSharp</a> <span>›</span>
+                <a href="#">语言参考</a> <span>›</span>
+                <span>Lexer 类</span>
+            </div>
+        </div>
+        
+        <!-- 概述部分 -->
+        <section id="overview" class="content-section">
+            <h2 class="section-title">Lexer 概述</h2>
+            <p>FeiSharp Lexer 是 FeiSharp 编程语言的词法分析器，负责将源代码字符串分解为有意义的词法单元（Tokens）。它是编译器和解释器前端的重要组成部分。</p>
+            
+            <div class="note">
+                <strong>注意：</strong> Lexer 是 FeiSharp 编译器/解释器的第一个阶段，将源代码转换为 Token 流供 Parser 使用。
+            </div>
+            
+            <div class="code-block">
+                <pre>namespace FeiSharpStudio;
+
+public class Lexer
+{
+    private readonly string _source;
+    private int _index;
+
+    public Lexer(string source)
+    {
+        _source = source;
+        _index = 0;
+    }
+
+    public Token NextToken()
+    {
+        // 词法分析核心逻辑
+    }
+}</pre>
+            </div>
+        </section>
+        
+        <!-- 架构设计 -->
+        <section id="architecture" class="content-section">
+            <h2 class="section-title">架构设计</h2>
+            <p>Lexer 采用顺序扫描设计模式，逐个字符分析源代码并生成对应的 Token。</p>
+            
+            <h3 class="subsection-title">核心数据结构</h3>
+            <div class="syntax-block">
+                <ul>
+                    <li><strong>_source</strong>: 待解析的源代码字符串</li>
+                    <li><strong>_index</strong>: 当前解析位置的索引</li>
+                    <li><strong>Token</strong>: 词法单元的数据结构，包含类型和值</li>
+                </ul>
+            </div>
+            
+            <h3 class="subsection-title">处理流程</h3>
+            <ol style="margin-left: 20px; line-height: 1.8;">
+                <li>跳过空白字符（空格、制表符、换行符）</li>
+                <li>识别单个字符的标点符号和运算符</li>
+                <li>识别字符串字面量（双引号包围的内容）</li>
+                <li>识别数字字面量（整数和小数）</li>
+                <li>识别标识符和关键字</li>
+                <li>处理未知字符（输出警告信息）</li>
+                <li>返回 EndOfFile Token 表示解析完成</li>
+            </ol>
+        </section>
+        
+        <!-- Token 类型 -->
+        <section id="token-types" class="content-section">
+            <h2 class="section-title">Token 类型</h2>
+            <p>FeiSharp Lexer 识别以下类型的词法单元：</p>
+            
+            <table class="token-table">
+                <thead>
+                    <tr>
+                        <th>Token 类型</th>
+                        <th>常量名</th>
+                        <th>描述</th>
+                        <th>示例</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>Punctuation</code></td>
+                        <td><code>TokenTypes.Punctuation</code></td>
+                        <td>标点符号</td>
+                        <td><code>; , ( ) { } [ ] . : #</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>Operator</code></td>
+                        <td><code>TokenTypes.Operator</code></td>
+                        <td>运算符</td>
+                        <td><code>+ - * / = &lt; &gt; ! & | ^ $</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>String</code></td>
+                        <td><code>TokenTypes.String</code></td>
+                        <td>字符串字面量</td>
+                        <td><code>"hello"</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>Number</code></td>
+                        <td><code>TokenTypes.Number</code></td>
+                        <td>数字字面量</td>
+                        <td><code>123, 3.14</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>Identifier</code></td>
+                        <td><code>TokenTypes.Identifier</code></td>
+                        <td>标识符（变量名、函数名等）</td>
+                        <td><code>myVariable, calculateSum</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>Keyword</code></td>
+                        <td>（根据具体关键字）</td>
+                        <td>语言关键字</td>
+                        <td><code>var, function, if, while</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>EndOfFile</code></td>
+                        <td><code>TokenTypes.EndOfFile</code></td>
+                        <td>文件结束标记</td>
+                        <td><code>""</code>（空字符串）</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="example">
+                <div class="example-title">Token 结构示例</div>
+                <pre>// Token 类的基本结构
+public class Token
+{
+    public TokenTypes Type { get; }
+    public string Value { get; }
+    
+    public Token(TokenTypes type, string value)
+    {
+        Type = type;
+        Value = value;
+    }
+}</pre>
+            </div>
+        </section>
+        
+        <!-- 标点符号 -->
+        <section id="punctuation" class="content-section">
+            <h2 class="section-title">标点符号</h2>
+            <p>Lexer 识别以下标点符号：</p>
+            
+            <div class="token-category">
+                <h3 class="subsection-title">基本标点</h3>
+                <table class="token-table">
+                    <thead>
+                        <tr>
+                            <th>字符</th>
+                            <th>Token 值</th>
+                            <th>用途</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>;</code></td>
+                            <td><code>";"</code></td>
+                            <td>语句结束符</td>
+                        </tr>
+                        <tr>
+                            <td><code>,</code></td>
+                            <td><code>","</code></td>
+                            <td>参数分隔符</td>
+                        </tr>
+                        <tr>
+                            <td><code>.</code></td>
+                            <td><code>"."</code></td>
+                            <td>成员访问、小数点</td>
+                        </tr>
+                        <tr>
+                            <td><code>:</code></td>
+                            <td><code>":"</code></td>
+                            <td>标签、类型声明</td>
+                        </tr>
+                        <tr>
+                            <td><code>#</code></td>
+                            <td><code>"#"</code></td>
+                            <td>特殊用途符号</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="token-category">
+                <h3 class="subsection-title">括号类</h3>
+                <table class="token-table">
+                    <thead>
+                        <tr>
+                            <th>字符</th>
+                            <th>Token 值</th>
+                            <th>用途</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>(</code></td>
+                            <td><code>"("</code></td>
+                            <td>左圆括号，函数调用、表达式分组</td>
+                        </tr>
+                        <tr>
+                            <td><code>)</code></td>
+                            <td><code>")"</code></td>
+                            <td>右圆括号</td>
+                        </tr>
+                        <tr>
+                            <td><code>{</code></td>
+                            <td><code>"{"</code></td>
+                            <td>左花括号，代码块开始</td>
+                        </tr>
+                        <tr>
+                            <td><code>}</code></td>
+                            <td><code>"}"</code></td>
+                            <td>右花括号，代码块结束</td>
+                        </tr>
+                        <tr>
+                            <td><code>[</code></td>
+                            <td><code>"["</code></td>
+                            <td>左方括号，数组索引</td>
+                        </tr>
+                        <tr>
+                            <td><code>]</code></td>
+                            <td><code>"]"</code></td>
+                            <td>右方括号</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="note">
+                <strong>注意：</strong> 所有标点符号都是单字符 Token，遇到即立即返回。
+            </div>
+        </section>
+        
+        <!-- 运算符 -->
+        <section id="operators" class="content-section">
+            <h2 class="section-title">运算符</h2>
+            <p>Lexer 识别以下运算符：</p>
+            
+            <table class="token-table">
+                <thead>
+                    <tr>
+                        <th>运算符</th>
+                        <th>Token 值</th>
+                        <th>类别</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>+</code></td>
+                        <td><code>"+"</code></td>
+                        <td>算术运算符</td>
+                        <td>加法、正号</td>
+                    </tr>
+                    <tr>
+                        <td><code>-</code></td>
+                        <td><code>"-"</code></td>
+                        <td>算术运算符</td>
+                        <td>减法、负号</td>
+                    </tr>
+                    <tr>
+                        <td><code>*</code></td>
+                        <td><code>"*"</code></td>
+                        <td>算术运算符</td>
+                        <td>乘法</td>
+                    </tr>
+                    <tr>
+                        <td><code>/</code></td>
+                        <td><code>"/"</code></td>
+                        <td>算术运算符</td>
+                        <td>除法</td>
+                    </tr>
+                    <tr>
+                        <td><code>=</code></td>
+                        <td><code>"="</code></td>
+                        <td>赋值运算符</td>
+                        <td>赋值</td>
+                    </tr>
+                    <tr>
+                        <td><code>&lt;</code></td>
+                        <td><code>"&lt;"</code></td>
+                        <td>比较运算符</td>
+                        <td>小于</td>
+                    </tr>
+                    <tr>
+                        <td><code>&gt;</code></td>
+                        <td><code>"&gt;"</code></td>
+                        <td>比较运算符</td>
+                        <td>大于</td>
+                    </tr>
+                    <tr>
+                        <td><code>!</code></td>
+                        <td><code>"!"</code></td>
+                        <td>逻辑运算符</td>
+                        <td>逻辑非</td>
+                    </tr>
+                    <tr>
+                        <td><code>&amp;</code></td>
+                        <td><code>"&amp;"</code></td>
+                        <td>逻辑运算符</td>
+                        <td>逻辑与</td>
+                    </tr>
+                    <tr>
+                        <td><code>|</code></td>
+                        <td><code>"|"</code></td>
+                        <td>逻辑运算符</td>
+                        <td>逻辑或</td>
+                    </tr>
+                    <tr>
+                        <td><code>^</code></td>
+                        <td><code>"^"</code></td>
+                        <td>逻辑运算符</td>
+                        <td>逻辑异或</td>
+                    </tr>
+                    <tr>
+                        <td><code>$</code></td>
+                        <td><code>"$"</code></td>
+                        <td>特殊运算符</td>
+                        <td>特殊用途</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="warning">
+                <strong>注意：</strong> 当前版本的 Lexer 只识别单字符运算符，复合运算符（如 ==、!=、&&、||）需要在 Parser 阶段处理。
+            </div>
+        </section>
+        
+        <!-- 字面量 -->
+        <section id="literals" class="content-section">
+            <h2 class="section-title">字面量</h2>
+            
+            <h3 class="subsection-title">字符串字面量</h3>
+            <p>字符串字面量由双引号包围，支持任意字符：</p>
+            <div class="code-block">
+                <pre>// 字符串解析逻辑
+if (current == '"')
+{
+    int start = ++_index;
+    while (_index < _source.Length && _source[_index] != '"')
+    {
+        _index++;
+    }
+    return new Token(TokenTypes.String, _source[start.._index++]);
+}</pre>
+            </div>
+            
+            <div class="example">
+                <div class="example-title">字符串示例</div>
+                <pre>"Hello, World!"        // → Token(TokenTypes.String, "Hello, World!")
+"FeiSharp v8.0"      // → Token(TokenTypes.String, "FeiSharp v8.0")
+"123"                // → Token(TokenTypes.String, "123")</pre>
+            </div>
+            
+            <h3 class="subsection-title">数字字面量</h3>
+            <p>数字字面量支持整数和小数格式：</p>
+            <div class="code-block">
+                <pre>// 数字解析逻辑
+if (char.IsDigit(current))
+{
+    int start = _index;
+    while (_index < _source.Length && 
+           (char.IsDigit(_source[_index]) || _source[_index] == '.')) 
+        _index++;
+    return new Token(TokenTypes.Number, _source[start.._index]);
+}</pre>
+            </div>
+            
+            <div class="example">
+                <div class="example-title">数字示例</div>
+                <pre>123           // → Token(TokenTypes.Number, "123")
+3.14         // → Token(TokenTypes.Number, "3.14")
+0.5          // → Token(TokenTypes.Number, "0.5")
+1000         // → Token(TokenTypes.Number, "1000")</pre>
+            </div>
+        </section>
+        
+        <!-- 标识符和关键字 -->
+        <section id="identifiers" class="content-section">
+            <h2 class="section-title">标识符和关键字</h2>
+            
+            <h3 class="subsection-title">标识符规则</h3>
+            <p>标识符必须以字母开头，可以包含字母和数字：</p>
+            <div class="code-block">
+                <pre>// 标识符解析逻辑
+if (char.IsLetter(current))
+{
+    int start = _index;
+    while (_index < _source.Length && char.IsLetterOrDigit(_source[_index]))
+        _index++;
+    string identifier = _source[start.._index];
+    if (FeiSharpKeywords.KeywordMap.TryGetValue(identifier, out Token keywordToken))
+        return keywordToken;
+    return new Token(TokenTypes.Identifier, identifier);
+}</pre>
+            </div>
+            
+            <h3 class="subsection-title">关键字识别</h3>
+            <p>关键字通过 <code>FeiSharpKeywords.KeywordMap</code> 字典进行识别：</p>
+            <table class="token-table">
+                <thead>
+                    <tr>
+                        <th>关键字</th>
+                        <th>Token 类型</th>
+                        <th>Token 值</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>var</code></td>
+                        <td><code>TokenTypes.Keyword</code></td>
+                        <td><code>"var"</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>function</code></td>
+                        <td><code>TokenTypes.Keyword</code></td>
+                        <td><code>"function"</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>if</code></td>
+                        <td><code>TokenTypes.Keyword</code></td>
+                        <td><code>"if"</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>while</code></td>
+                        <td><code>TokenTypes.Keyword</code></td>
+                        <td><code>"while"</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>return</code></td>
+                        <td><code>TokenTypes.Keyword</code></td>
+                        <td><code>"return"</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>print</code></td>
+                        <td><code>TokenTypes.Keyword</code></td>
+                        <td><code>"print"</code></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="example">
+                <div class="example-title">标识符示例</div>
+                <pre>myVariable     // → Token(TokenTypes.Identifier, "myVariable")
+calculateSum   // → Token(TokenTypes.Identifier, "calculateSum")
+var           // → Token(TokenTypes.Keyword, "var") [关键字]
+x123         // → Token(TokenTypes.Identifier, "x123")
+_private     // → Token(TokenTypes.Identifier, "_private")</pre>
+            </div>
+        </section>
+        
+        <!-- 解析流程 -->
+        <section id="parsing-rules" class="content-section">
+            <h2 class="section-title">解析流程</h2>
+            
+            <h3 class="subsection-title">主循环逻辑</h3>
+            <div class="code-block">
+                <pre>public Token NextToken()
+{
+    while (_index < _source.Length)
+    {
+        char current = _source[_index];
+        
+        // 1. 跳过空白字符
+        if (char.IsWhiteSpace(current))
+        {
+            _index++;
+            continue;
+        }
+        
+        // 2. 检查单字符 Token（标点符号和运算符）
+        if (current == '#') { _index++; return new Token(TokenTypes.Punctuation, "#"); }
+        if (current == ':') { _index++; return new Token(TokenTypes.Punctuation, ":"); }
+        // ... 其他单字符检查
+        
+        // 3. 检查字符串字面量
+        if (current == '"') { /* 字符串解析逻辑 */ }
+        
+        // 4. 检查数字字面量
+        if (char.IsDigit(current)) { /* 数字解析逻辑 */ }
+        
+        // 5. 检查标识符和关键字
+        if (char.IsLetter(current)) { /* 标识符解析逻辑 */ }
+        
+        // 6. 未知字符处理
+        Console.WriteLine("Unexpected character: " + current + ", it will be skipped");
+        _index++;
+    }
+    
+    // 7. 返回文件结束标记
+    return new Token(TokenTypes.EndOfFile, "");
+}</pre>
+            </div>
+            
+            <h3 class="subsection-title">处理顺序</h3>
+            <div class="syntax-block">
+                <ol style="margin-left: 20px; line-height: 1.8;">
+                    <li><strong>空白字符跳过</strong>：空格、制表符、换行符等</li>
+                    <li><strong>单字符Token识别</strong>：标点符号和运算符</li>
+                    <li><strong>字符串字面量</strong>：双引号包围的内容</li>
+                    <li><strong>数字字面量</strong>：整数和小数</li>
+                    <li><strong>标识符和关键字</strong>：字母开头的标识符</li>
+                    <li><strong>错误处理</strong>：未知字符警告</li>
+                </ol>
+            </div>
+        </section>
+        
+        <!-- 关键字识别 -->
+        <section id="keyword-recognition" class="content-section">
+            <h2 class="section-title">关键字识别</h2>
+            
+            <p>关键字通过 <code>FeiSharpKeywords.KeywordMap</code> 字典进行映射。这是一个静态字典，在程序启动时初始化。</p>
+            
+            <div class="code-block">
+                <pre>// FeiSharpKeywords 类示例
+public static class FeiSharpKeywords
+{
+    public static Dictionary<string, Token> KeywordMap = new()
+    {
+        { "var", new Token(TokenTypes.Keyword, "var") },
+        { "function", new Token(TokenTypes.Keyword, "function") },
+        { "if", new Token(TokenTypes.Keyword, "if") },
+        { "while", new Token(TokenTypes.Keyword, "while") },
+        { "return", new Token(TokenTypes.Keyword, "return") },
+        { "print", new Token(TokenTypes.Keyword, "print") },
+        { "true", new Token(TokenTypes.Keyword, "true") },
+        { "false", new Token(TokenTypes.Keyword, "false") },
+        { "null", new Token(TokenTypes.Keyword, "null") }
+        // ... 其他关键字
+    };
+}</pre>
+            </div>
+            
+            <div class="note">
+                <strong>设计模式：</strong> 使用字典进行关键字映射比一系列 if-else 语句更高效，便于维护和扩展。
+            </div>
+        </section>
+        
+        <!-- 错误处理 -->
+        <section id="error-handling" class="content-section">
+            <h2 class="section-title">错误处理</h2>
+            
+            <p>Lexer 采用宽容的错误处理策略：</p>
+            
+            <div class="warning">
+                <strong>警告信息：</strong> 当遇到无法识别的字符时，Lexer 会输出警告信息并跳过该字符。
+            </div>
+            
+            <div class="code-block">
+                <pre>// 未知字符处理逻辑
+Console.WriteLine("Unexpected character: " + current + ", it will be skipped");
+_index++;</pre>
+            </div>
+            
+            <h3 class="subsection-title">错误处理策略</h3>
+            <div class="syntax-block">
+                <ul>
+                    <li><strong>宽容性解析</strong>：遇到未知字符时不抛出异常，而是跳过继续解析</li>
+                    <li><strong>信息性警告</strong>：在控制台输出有用的错误信息</li>
+                    <li><strong>位置保持</strong>：正确维护 <code>_index</code> 位置，确保后续解析正常</li>
+                    <li><strong>可恢复性</strong>：错误不会导致解析过程中断</li>
+                </ul>
+            </div>
+        </section>
+        
+        <!-- 基础用法 -->
+        <section id="basic-usage" class="content-section">
+            <h2 class="section-title">基础用法</h2>
+            
+            <h3 class="subsection-title">创建 Lexer 实例</h3>
+            <div class="code-block">
+                <pre>using FeiSharpStudio;
+
+// 创建 Lexer 实例
+string sourceCode = "var x = 10 + 20;";
+Lexer lexer = new Lexer(sourceCode);
+
+// 逐个获取 Token
+Token token;
+do
+{
+    token = lexer.NextToken();
+    Console.WriteLine($"Type: {token.Type}, Value: {token.Value}");
+} while (token.Type != TokenTypes.EndOfFile);</pre>
+            </div>
+            
+            <h3 class="subsection-title">完整解析示例</h3>
+            <div class="example">
+                <div class="example-title">源代码解析示例</div>
+                <pre>输入源代码:
+var message = "Hello, World!";
+print(message);
+
+解析结果:
+1. Token(Keyword, "var")
+2. Token(Identifier, "message")
+3. Token(Operator, "=")
+4. Token(String, "Hello, World!")
+5. Token(Punctuation, ";")
+6. Token(Keyword, "print")
+7. Token(Punctuation, "(")
+8. Token(Identifier, "message")
+9. Token(Punctuation, ")")
+10. Token(Punctuation, ";")
+11. Token(EndOfFile, "")</pre>
+            </div>
+        </section>
+        
+        <!-- 高级示例 -->
+        <section id="advanced-examples" class="content-section">
+            <h2 class="section-title">高级示例</h2>
+            
+            <h3 class="subsection-title">函数定义解析</h3>
+            <div class="example">
+                <div class="example-title">函数定义 Token 序列</div>
+                <pre>输入源代码:
+function add(a, b)
+fbegin:
+    _return a + b;
+fend;
+
+解析结果:
+1. Token(Keyword, "function")
+2. Token(Identifier, "add")
+3. Token(Punctuation, "(")
+4. Token(Identifier, "a")
+5. Token(Punctuation, ",")
+6. Token(Identifier, "b")
+7. Token(Punctuation, ")")
+8. Token(Identifier, "fbegin")
+9. Token(Punctuation, ":")
+10. Token(Identifier, "_return")
+11. Token(Identifier, "a")
+12. Token(Operator, "+")
+13. Token(Identifier, "b")
+14. Token(Punctuation, ";")
+15. Token(Identifier, "fend")
+16. Token(Punctuation, ";")
+17. Token(EndOfFile, "")</pre>
+            </div>
+            
+            <h3 class="subsection-title">复杂表达式解析</h3>
+            <div class="example">
+                <div class="example-title">数学表达式 Token 序列</div>
+                <pre>输入源代码:
+var result = (x + y) * 3.14 / 2;
+
+解析结果:
+1. Token(Keyword, "var")
+2. Token(Identifier, "result")
+3. Token(Operator, "=")
+4. Token(Punctuation, "(")
+5. Token(Identifier, "x")
+6. Token(Operator, "+")
+7. Token(Identifier, "y")
+8. Token(Punctuation, ")")
+9. Token(Operator, "*")
+10. Token(Number, "3.14")
+11. Token(Operator, "/")
+12. Token(Number, "2")
+13. Token(Punctuation, ";")
+14. Token(EndOfFile, "")</pre>
+            </div>
+        </section>
+        
+        <!-- API 参考 -->
+        <section id="constructor" class="content-section">
+            <h2 class="section-title">构造函数</h2>
+            
+            <div class="syntax-block">
+                <h3>Lexer(string source)</h3>
+                <p><strong>参数：</strong></p>
+                <ul>
+                    <li><code>source</code> (string): 要解析的源代码字符串</li>
+                </ul>
+                <p><strong>描述：</strong></p>
+                <p>创建 Lexer 实例并初始化解析状态。内部维护源代码字符串和当前解析位置索引。</p>
+            </div>
+            
+            <div class="code-block">
+                <pre>// 构造函数实现
+public Lexer(string source)
+{
+    _source = source;  // 存储源代码
+    _index = 0;        // 初始化解析位置
+}</pre>
+            </div>
+        </section>
+        
+        <!-- 方法列表 -->
+        <section id="methods" class="content-section">
+            <h2 class="section-title">方法列表</h2>
+            
+            <table class="token-table">
+                <thead>
+                    <tr>
+                        <th>方法</th>
+                        <th>返回类型</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>NextToken()</code></td>
+                        <td><code>Token</code></td>
+                        <td>获取下一个词法单元。这是 Lexer 的核心方法，每次调用返回一个 Token。</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3 class="subsection-title">NextToken() 方法</h3>
+            <div class="syntax-block">
+                <p><strong>功能：</strong> 从源代码中提取下一个词法单元</p>
+                <p><strong>返回值：</strong> <code>Token</code> 对象，包含词法单元的类型和值</p>
+                <p><strong>异常：</strong> 无（采用宽容的错误处理策略）</p>
+                <p><strong>状态变化：</strong> 更新内部索引 <code>_index</code></p>
+            </div>
+            
+            <div class="code-block">
+                <pre>// 方法签名
+public Token NextToken()
+{
+    // 核心解析逻辑
+    // 1. 跳过空白字符
+    // 2. 检查是否到达文件末尾
+    // 3. 识别各种词法单元
+    // 4. 返回对应的 Token
+}</pre>
+            </div>
+        </section>
+    </main>
+    
+    <script>
+        // 平滑滚动和导航高亮
+        document.addEventListener('DOMContentLoaded', function() {
+            const navItems = document.querySelectorAll('.nav-item a');
+            const sections = document.querySelectorAll('.content-section');
+            
+            // 导航点击事件
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // 移除所有active类
+                    navItems.forEach(nav => {
+                        nav.parentElement.classList.remove('active');
+                    });
+                    
+                    // 添加active类
+                    this.parentElement.classList.add('active');
+                    
+                    // 滚动到对应部分
+                    const targetId = this.getAttribute('href');
+                    if (targetId !== '#') {
+                        const targetSection = document.querySelector(targetId);
+                        if (targetSection) {
+                            window.scrollTo({
+                                top: targetSection.offsetTop - 20,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                });
+            });
+            
+            // 滚动时更新导航高亮
+            window.addEventListener('scroll', function() {
+                let current = '';
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    
+                    if (scrollY >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                navItems.forEach(item => {
+                    item.parentElement.classList.remove('active');
+                    if (item.getAttribute('href') === '#' + current) {
+                        item.parentElement.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
