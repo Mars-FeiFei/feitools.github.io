@@ -1,6 +1,825 @@
 <!DOCTYPE html>
-<h1>下载页面</h1>
-<title>Download</title>
-<a href = "FeiSharp_Installer.exe">FeiSharp_Installer.exe(FeiSharp安装文件_8.0)</a><br/>
-<a href = "feisharp-language-support-1.0.0.vsix">feisharp-language-support-1.0.0.vsix(VsCode插件)</a><br/>
-<a href = "feisharp.zip">FeiSharp.zip(FeiSharp安装包 -- 包含Exe版_8.5)</a><br/>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>下载 FeiSharp - FeiSharp 文档</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        :root {
+            --primary-color: #0078d4;
+            --secondary-color: #2b579a;
+            --bg-color: #f6f6f6;
+            --sidebar-bg: #f3f2f1;
+            --border-color: #e1dfdd;
+            --text-color: #323130;
+            --card-bg: #ffffff;
+            --success-color: #107c10;
+            --warning-color: #ff8c00;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        /* 顶部导航 */
+        .top-nav {
+            background-color: white;
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 20px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .top-nav .logo {
+            display: flex;
+            align-items: center;
+            margin-right: 30px;
+            text-decoration: none;
+        }
+        
+        .logo-icon {
+            width: 24px;
+            height: 24px;
+            background-color: var(--primary-color);
+            border-radius: 4px;
+            margin-right: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .logo-text {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            flex: 1;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 14px;
+            padding: 5px 0;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+        
+        .nav-links a.active {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+        }
+        
+        .github-link {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        /* 主容器 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        /* 页面标题 */
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .page-title {
+            font-size: 42px;
+            font-weight: 300;
+            margin-bottom: 15px;
+            color: var(--text-color);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .page-subtitle {
+            font-size: 18px;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* 下载卡片网格 */
+        .download-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .download-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .download-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 24px;
+        }
+        
+        .card-icon.installer {
+            background-color: rgba(0, 120, 212, 0.1);
+            color: var(--primary-color);
+        }
+        
+        .card-icon.plugin {
+            background-color: rgba(43, 87, 154, 0.1);
+            color: var(--secondary-color);
+        }
+        
+        .card-icon.package {
+            background-color: rgba(16, 124, 16, 0.1);
+            color: var(--success-color);
+        }
+        
+        .card-title {
+            font-size: 22px;
+            font-weight: 500;
+            color: var(--text-color);
+            margin-bottom: 5px;
+        }
+        
+        .card-version {
+            font-size: 14px;
+            color: #666;
+            background-color: var(--bg-color);
+            padding: 2px 8px;
+            border-radius: 12px;
+            display: inline-block;
+        }
+        
+        .card-description {
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            flex: 1;
+        }
+        
+        .download-info {
+            background-color: var(--bg-color);
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        
+        .info-label {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .info-value {
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .file-size {
+            color: var(--primary-color);
+        }
+        
+        .download-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            padding: 14px 24px;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 16px;
+            transition: background-color 0.3s, transform 0.2s;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .download-button:hover {
+            background-color: var(--secondary-color);
+            transform: scale(1.02);
+        }
+        
+        .download-button:active {
+            transform: scale(0.98);
+        }
+        
+        .button-icon {
+            font-size: 18px;
+        }
+        
+        /* 系统要求部分 */
+        .requirements-section {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 40px;
+            margin-bottom: 50px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+        }
+        
+        .section-title {
+            font-size: 28px;
+            font-weight: 300;
+            margin-bottom: 25px;
+            color: var(--secondary-color);
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .requirements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .requirement-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+        
+        .requirement-icon {
+            width: 24px;
+            height: 24px;
+            background-color: rgba(0, 120, 212, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            flex-shrink: 0;
+        }
+        
+        .requirement-content h4 {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 5px;
+            color: var(--text-color);
+        }
+        
+        .requirement-content p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        /* 安装指南 */
+        .installation-guide {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+        }
+        
+        .steps-list {
+            list-style: none;
+            counter-reset: step-counter;
+        }
+        
+        .step-item {
+            counter-increment: step-counter;
+            margin-bottom: 30px;
+            padding-left: 50px;
+            position: relative;
+        }
+        
+        .step-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .step-item::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 36px;
+            height: 36px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        .step-title {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+        
+        .step-description {
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .step-code {
+            background-color: var(--bg-color);
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'Consolas', monospace;
+            font-size: 14px;
+            border-left: 3px solid var(--primary-color);
+            margin-top: 10px;
+        }
+        
+        /* 底部信息 */
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .footer-links a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .download-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-title {
+                font-size: 32px;
+            }
+            
+            .requirements-section,
+            .installation-guide {
+                padding: 25px;
+            }
+            
+            .top-nav {
+                padding: 0 15px;
+            }
+            
+            .nav-links {
+                gap: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px 15px;
+            }
+            
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .card-icon {
+                margin-bottom: 15px;
+            }
+            
+            .step-item {
+                padding-left: 40px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- 顶部导航 -->
+    <nav class="top-nav">
+        <a href="#" class="logo">
+            <div class="logo-icon">F</div>
+            <span class="logo-text">FeiSharp</span>
+        </a>
+        <div class="nav-links">
+            <a href="./documents/parser.html">Parser 文档</a>
+            <a href="./documents/lexer.html">Lexer 文档</a>
+            <a href="./documents/learn/index.html">错误分析</a>
+            <a href="./index.html">API 参考</a>
+            <a href="./index.html">示例</a>
+            <a href="./download.html" class="active">下载</a>
+        </div>
+        <a href="https://github.com/yourusername/feisharp" class="github-link" target="_blank">
+            <i class="fab fa-github"></i>
+            GitHub
+        </a>
+    </nav>
+    
+    <!-- 主容器 -->
+    <div class="container">
+        <!-- 页面标题 -->
+        <div class="page-header">
+            <h1 class="page-title">下载 FeiSharp</h1>
+            <p class="page-subtitle">获取最新版本的 FeiSharp 编程语言工具链、编辑器和相关资源</p>
+        </div>
+        
+        <!-- 下载卡片网格 -->
+        <div class="download-grid">
+            <!-- 安装程序卡片 -->
+            <div class="download-card">
+                <div class="card-header">
+                    <div class="card-icon installer">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <div>
+                        <h3 class="card-title">FeiSharp 安装程序</h3>
+                        <span class="card-version">版本 8.0</span>
+                    </div>
+                </div>
+                <p class="card-description">
+                    一键安装 FeiSharp 开发环境，包含编译器、运行时和基础库。适合首次使用 FeiSharp 的开发者。
+                </p>
+                <div class="download-info">
+                    <div class="info-row">
+                        <span class="info-label">文件类型</span>
+                        <span class="info-value">Windows 可执行文件</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">文件大小</span>
+                        <span class="info-value file-size">~44 MB</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">系统要求</span>
+                        <span class="info-value">Windows 10/11</span>
+                    </div>
+                </div>
+                <a href="FeiSharp_Installer.exe" class="download-button">
+                    <i class="fas fa-download button-icon"></i>
+                    下载安装程序
+                </a>
+            </div>
+            
+            <!-- VS Code 插件卡片 -->
+            <div class="download-card">
+                <div class="card-header">
+                    <div class="card-icon plugin">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <div>
+                        <h3 class="card-title">Visual Studio Code 插件</h3>
+                        <span class="card-version">版本 1.0.0</span>
+                    </div>
+                </div>
+                <p class="card-description">
+                    为 Visual Studio Code 提供全面的 FeiSharp 语言支持，包括语法高亮、代码补全、错误检查和调试功能。
+                </p>
+                <div class="download-info">
+                    <div class="info-row">
+                        <span class="info-label">文件类型</span>
+                        <span class="info-value">VSIX 扩展包</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">文件大小</span>
+                        <span class="info-value file-size">~18 MB</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">VS Code 版本</span>
+                        <span class="info-value">≥ 1.60.0</span>
+                    </div>
+                </div>
+                <a href="feisharp-language-support-1.0.0.vsix" class="download-button">
+                    <i class="fas fa-plug button-icon"></i>
+                    下载 VS Code 插件
+                </a>
+            </div>
+            
+            <!-- 完整安装包卡片 -->
+            <div class="download-card">
+                <div class="card-header">
+                    <div class="card-icon package">
+                        <i class="fas fa-box-open"></i>
+                    </div>
+                    <div>
+                        <h3 class="card-title">FeiSharp 完整安装包</h3>
+                        <span class="card-version">版本 8.5</span>
+                    </div>
+                </div>
+                <p class="card-description">
+                    包含所有 FeiSharp 组件的完整安装包，支持多平台。包含独立可执行文件、库文件和开发工具。
+                </p>
+                <div class="download-info">
+                    <div class="info-row">
+                        <span class="info-label">文件类型</span>
+                        <span class="info-value">ZIP 压缩包</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">文件大小</span>
+                        <span class="info-value file-size">~62 MB</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">包含内容</span>
+                        <span class="info-value">EXE + 源代码 + 工具</span>
+                    </div>
+                </div>
+                <a href="feisharp.zip" class="download-button">
+                    <i class="fas fa-file-archive button-icon"></i>
+                    下载完整安装包
+                </a>
+            </div>
+        </div>
+        
+        <!-- 系统要求部分 -->
+        <div class="requirements-section">
+            <h2 class="section-title">系统要求</h2>
+            <div class="requirements-grid">
+                <div class="requirement-item">
+                    <div class="requirement-icon">
+                        <i class="fas fa-desktop"></i>
+                    </div>
+                    <div class="requirement-content">
+                        <h4>操作系统</h4>
+                        <p>Windows 10 或更高版本，macOS 10.15+，Linux (Ubuntu 18.04+)</p>
+                    </div>
+                </div>
+                <div class="requirement-item">
+                    <div class="requirement-icon">
+                        <i class="fas fa-microchip"></i>
+                    </div>
+                    <div class="requirement-content">
+                        <h4>处理器</h4>
+                        <p>1 GHz 或更快的处理器，支持 SSE2 指令集</p>
+                    </div>
+                </div>
+                <div class="requirement-item">
+                    <div class="requirement-icon">
+                        <i class="fas fa-memory"></i>
+                    </div>
+                    <div class="requirement-content">
+                        <h4>内存</h4>
+                        <p>最低 1 GB RAM，建议 2 GB 或更高</p>
+                    </div>
+                </div>
+                <div class="requirement-item">
+                    <div class="requirement-icon">
+                        <i class="fas fa-hdd"></i>
+                    </div>
+                    <div class="requirement-content">
+                        <h4>存储空间</h4>
+                        <p>至少 70 MB 可用磁盘空间</p>
+                    </div>
+                </div>
+                <div class="requirement-item">
+                    <div class="requirement-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <div class="requirement-content">
+                        <h4>网络连接</h4>
+                        <p>安装和更新时需要网络连接</p>
+                    </div>
+                </div>
+                <div class="requirement-item">
+                    <div class="requirement-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="requirement-content">
+                        <h4>权限</h4>
+                        <p>管理员权限（仅 Windows 安装需要）</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="note" style="background-color: #e7f4ff; padding: 15px; border-radius: 6px; border-left: 4px solid var(--primary-color);">
+                <p style="color: var(--primary-color); font-weight: 500; margin-bottom: 5px;">
+                    <i class="fas fa-info-circle"></i> 兼容性说明
+                </p>
+                <p style="color: #666; font-size: 14px;">
+                    FeiSharp 8.5 完整安装包包含独立可执行文件，无需安装即可运行。VS Code 插件需要 Visual Studio Code 1.60.0 或更高版本。
+                </p>
+            </div>
+        </div>
+        
+        <!-- 安装指南 -->
+        <div class="installation-guide">
+            <h2 class="section-title">安装指南</h2>
+            <ol class="steps-list">
+                <li class="step-item">
+                    <h4 class="step-title">下载安装文件</h4>
+                    <p class="step-description">根据您的需求选择上述下载选项。首次使用建议下载完整安装程序。</p>
+                </li>
+                <li class="step-item">
+                    <h4 class="step-title">运行安装程序</h4>
+                    <p class="step-description">Windows 用户运行 .exe 文件，macOS/Linux 用户解压 ZIP 包。</p>
+                    <div class="step-code"># Windows
+FeiSharp_Installer.exe
+
+# macOS/Linux
+unzip feisharp.zip</div>
+                </li>
+                <li class="step-item">
+                    <h4 class="step-title">配置环境变量</h4>
+                    <p class="step-description">将 FeiSharp 安装目录添加到系统 PATH 环境变量。</p>
+                    <div class="step-code"># Windows (PowerShell)
+[Environment]::SetEnvironmentVariable("PATH", "$env:PATH;C:\Program Files\FeiSharp", "User")
+
+# Linux/macOS (Bash)
+echo 'export PATH="$PATH:/opt/feisharp/bin"' >> ~/.bashrc
+source ~/.bashrc</div>
+                </li>
+                <li class="step-item">
+                    <h4 class="step-title">安装 VS Code 插件</h4>
+                    <p class="step-description">在 VS Code 中安装 FeiSharp 语言支持插件。</p>
+                    <div class="step-code"># 方法1: 通过下载的 .vsix 文件安装
+code --install-extension feisharp-language-support-1.0.0.vsix
+
+# 方法2: 在 VS Code 扩展市场中搜索 "FeiSharp"</div>
+                </li>
+                <li class="step-item">
+                    <h4 class="step-title">验证安装</h4>
+                    <p class="step-description">打开终端，运行以下命令验证安装是否成功。</p>
+                    <div class="step-code"># 检查 FeiSharp 版本
+feisharp --version
+
+# 运行简单脚本
+feisharp run hello.fsc</div>
+                </li>
+            </ol>
+        </div>
+        
+        <!-- 其他下载选项 -->
+        <div class="requirements-section" style="margin-top: 30px;">
+            <h2 class="section-title">其他下载选项</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                <a href="feisharp-sdk.zip" style="text-decoration: none; color: inherit;">
+                    <div style="background-color: var(--bg-color); padding: 15px; border-radius: 6px; text-align: center; transition: background-color 0.3s;">
+                        <div style="color: var(--primary-color); margin-bottom: 10px;">
+                            <i class="fas fa-tools fa-2x"></i>
+                        </div>
+                        <div style="font-weight: 500;">FeiSharp SDK</div>
+                        <div style="font-size: 12px; color: #666; margin-top: 5px;">开发工具包</div>
+                    </div>
+                </a>
+                <a href="feisharp-docs.pdf" style="text-decoration: none; color: inherit;">
+                    <div style="background-color: var(--bg-color); padding: 15px; border-radius: 6px; text-align: center; transition: background-color 0.3s;">
+                        <div style="color: var(--secondary-color); margin-bottom: 10px;">
+                            <i class="fas fa-book fa-2x"></i>
+                        </div>
+                        <div style="font-weight: 500;">离线文档</div>
+                        <div style="font-size: 12px; color: #666; margin-top: 5px;">PDF 格式</div>
+                    </div>
+                </a>
+                <a href="https://github.com/yourusername/feisharp/releases" style="text-decoration: none; color: inherit;">
+                    <div style="background-color: var(--bg-color); padding: 15px; border-radius: 6px; text-align: center; transition: background-color 0.3s;">
+                        <div style="color: #333; margin-bottom: 10px;">
+                            <i class="fab fa-github fa-2x"></i>
+                        </div>
+                        <div style="font-weight: 500;">历史版本</div>
+                        <div style="font-size: 12px; color: #666; margin-top: 5px;">GitHub Releases</div>
+                    </div>
+                </a>
+                <a href="feisharp-samples.zip" style="text-decoration: none; color: inherit;">
+                    <div style="background-color: var(--bg-color); padding: 15px; border-radius: 6px; text-align: center; transition: background-color 0.3s;">
+                        <div style="color: var(--success-color); margin-bottom: 10px;">
+                            <i class="fas fa-code fa-2x"></i>
+                        </div>
+                        <div style="font-weight: 500;">示例代码</div>
+                        <div style="font-size: 12px; color: #666; margin-top: 5px;">50+ 个示例项目</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        
+        <!-- 底部信息 -->
+        <div class="footer">
+            <div class="footer-links">
+                <a href="#">许可证</a>
+                <a href="#">隐私政策</a>
+                <a href="#">使用条款</a>
+                <a href="#">支持</a>
+                <a href="#">贡献指南</a>
+            </div>
+            <p>© 2024 FeiSharp 项目。保留所有权利。</p>
+            <p style="font-size: 12px; color: #999; margin-top: 10px;">
+                FeiSharp 是一个开源项目，遵循 MIT 许可证发布。
+            </p>
+        </div>
+    </div>
+    
+    <script>
+        // 添加简单的交互效果
+        document.addEventListener('DOMContentLoaded', function() {
+            // 下载按钮点击动画
+            const downloadButtons = document.querySelectorAll('.download-button');
+            downloadButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    // 添加点击反馈
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 200);
+                    
+                    // 记录下载统计（这里可以添加实际的统计代码）
+                    console.log(`下载: ${this.getAttribute('href')}`);
+                });
+            });
+            
+            // 卡片悬停效果增强
+            const cards = document.querySelectorAll('.download-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.zIndex = '10';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.zIndex = '';
+                });
+            });
+            
+            // 其他下载选项悬停效果
+            const otherDownloads = document.querySelectorAll('.requirements-section a');
+            otherDownloads.forEach(link => {
+                link.addEventListener('mouseenter', function() {
+                    this.querySelector('div').style.backgroundColor = 'rgba(0, 120, 212, 0.1)';
+                });
+                link.addEventListener('mouseleave', function() {
+                    this.querySelector('div').style.backgroundColor = '';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
