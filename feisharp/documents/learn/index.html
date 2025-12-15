@@ -510,10 +510,9 @@
             <div class="left-nav-section">
                 <div class="left-nav-title">相关链接</div>
                 <ul class="left-nav-list">
-                    <li class="left-nav-item"><a href="#">FeiSharp 语言参考</a></li>
-                    <li class="left-nav-item"><a href="#">FeiSharp 编译器选项</a></li>
-                    <li class="left-nav-item"><a href="#">FeiSharp 编程指南</a></li>
-                    <li class="left-nav-item"><a href="#">报告问题</a></li>
+                    <li class="left-nav-item"><a href="../parser.html">FeiSharp Parser文档参考</a></li>
+                    <li class="left-nav-item"><a href="../lexer.html">FeiSharp Lexer文档参考</a></li>
+                    <li class="left-nav-item"><a href="../../index.html">FeiSharp 首页</a></li>
                 </ul>
             </div>
         </nav>
@@ -1271,10 +1270,9 @@ fend;</pre>
             <div style="margin-top: 30px;">
                 <div class="right-nav-title">相关资源</div>
                 <ul class="right-nav-list">
-                    <li class="right-nav-item"><a href="#">FeiSharp 语言规范</a></li>
-                    <li class="right-nav-item"><a href="#">编译器选项</a></li>
-                    <li class="right-nav-item"><a href="#">调试 FeiSharp 代码</a></li>
-                    <li class="right-nav-item"><a href="#">报告编译器错误</a></li>
+                    <li class="right-nav-item"><a href="../parser.html">FeiSharp Parser文档参考</a></li>
+                    <li class="right-nav-item"><a href="../lexer.html">FeiSharp Lexer文档参考</a></li>
+                    <li class="right-nav-item"><a href="../../index.html">FeiSharp 首页</a></li>
                 </ul>
             </div>
         </aside>
@@ -1309,6 +1307,9 @@ fend;</pre>
                     
                     // 滚动到对应部分
                     const targetId = this.getAttribute('href');
+                    if(targetId.indexOf('#') == -1){
+                        location.href = targetId;
+                    }
                     if (targetId && targetId !== '#') {
                         const targetElement = document.querySelector(targetId);
                         if (targetElement) {
