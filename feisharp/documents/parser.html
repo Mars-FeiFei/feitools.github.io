@@ -320,7 +320,7 @@
         <div class="header">
             <h1>FeiSharp Parser 文档</h1>
             <div class="breadcrumb">
-                <a href="#">FeiSharp</a> <span>›</span>
+                <a href="../index.html">FeiSharp</a> <span>›</span>
                 <a href="#">语言参考</a> <span>›</span>
                 <span>Parser 类</span>
             </div>
@@ -611,28 +611,43 @@ cstr(123, "strValue");  // strValue = "123";</pre>
                     <tr>
                         <td><code>readline</code></td>
                         <td><code>readline(variableName);</code></td>
-                        <td>内置</td>
+                        <td>FeiSharp(内置)</td>
                     </tr>
                     <tr>
                         <td><code>readkey</code></td>
                         <td><code>readkey(variableName);</code></td>
-                        <td>内置</td>
+                        <td>FeiSharp(内置)</td>
+                    </tr>
+                    <tr>
+                        <td><code>getcurrentfilepath</code></td>
+                        <td><code>getcurrentfilepath();</code></td>
+                        <td>$io_extand, $prelude.fsc</td>
+                    </tr>
+                    <tr>
+                        <td><code>getcurrentfolderpath</code></td>
+                        <td><code>getcurrentfolderpath();</code></td>
+                        <td>$io_extand, $prelude.fsc</td>
+                    </tr>
+                    <tr>
+                        <td><code>mappath</code></td>
+                        <td><code>mappath(vpath);</code></td>
+                        <td>$io_extand, $prelude.fsc</td>
                     </tr>
                 </tbody>
             </table>
             
             <div class="example">
                 <div class="example-title">示例：文件操作</div>
-                <pre>// 导入命名空间
+                <pre>// 导入命名空间;
 import "FeiSharp.IO";
 
-// 读取文件内容
+// 读取文件内容;
 read("fileContent" as "data.txt");
 
-// 写入文件
+// 写入文件;
 export("Hello World" as "output.txt");
 
-// 读取用户输入
+// 读取用户输入;
 readline("userInput");</pre>
             </div>
         </section>
