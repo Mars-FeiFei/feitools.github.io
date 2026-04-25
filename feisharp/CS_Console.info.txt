@@ -1,2 +1,2 @@
-Version: 1.2.1
+Version: 1.2.1, Size: <1KB
 A CSharp-style console function library is provided by FeiFei.

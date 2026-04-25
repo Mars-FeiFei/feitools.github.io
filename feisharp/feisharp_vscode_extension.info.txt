@@ -1,0 +1,2 @@
+Version: 2.0.0, Size: ~17.8MB
+A command script(Windows CMD Prompt) for install feisharp vscode extension.
