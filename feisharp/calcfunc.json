@@ -1,3 +1,4 @@
 {
-    "paths": ["calcfunc.fsc"]
+    "paths": ["calcfunc.fsc"],
+    "version": "1.0.1"
 }
