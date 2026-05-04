@@ -31,7 +31,7 @@
             min-height: 100vh;
         }
         
-        /* 顶部导航 */
+        
         .top-nav {
             background-color: white;
             border-bottom: 1px solid var(--border-color);
@@ -103,14 +103,14 @@
             font-size: 14px;
         }
         
-        /* 主容器 */
+        
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 40px 20px;
         }
         
-        /* 页面标题 */
+        
         .page-header {
             text-align: center;
             margin-bottom: 50px;
@@ -134,7 +134,7 @@
             margin: 0 auto;
         }
         
-        /* 下载卡片网格 */
+        
         .download-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -280,7 +280,7 @@
             font-size: 18px;
         }
         
-        /* 系统要求部分 */
+        
         .requirements-section {
             background-color: var(--card-bg);
             border-radius: 8px;
@@ -336,7 +336,7 @@
             font-size: 14px;
         }
         
-        /* 安装指南 */
+        
         .installation-guide {
             background-color: var(--card-bg);
             border-radius: 8px;
@@ -399,7 +399,7 @@
             margin-top: 10px;
         }
         
-        /* 底部信息 */
+        
         .footer {
             text-align: center;
             margin-top: 60px;
@@ -425,7 +425,7 @@
             text-decoration: underline;
         }
         
-        /* 响应式设计 */
+        
         @media (max-width: 768px) {
             .download-grid {
                 grid-template-columns: 1fr;
@@ -471,7 +471,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <!-- 顶部导航 -->
+    
     <nav class="top-nav">
         <a href="#" class="logo">
             <div class="logo-icon">F</div>
@@ -490,17 +490,17 @@
         </a>
     </nav>
     
-    <!-- 主容器 -->
+    
     <div class="container">
-        <!-- 页面标题 -->
+        
         <div class="page-header">
             <h1 class="page-title">下载 FeiSharp</h1>
             <p class="page-subtitle">获取最新版本的 FeiSharp 编程语言工具链、编辑器和相关资源</p>
         </div>
         
-        <!-- 下载卡片网格 -->
+        
         <div class="download-grid">
-            <!-- VS Code 插件卡片 -->
+            
             <div class="download-card">
                 <div class="card-header">
                     <div class="card-icon plugin">
@@ -534,7 +534,7 @@
                 </a>
             </div>
             
-            <!-- 完整安装包卡片 -->
+            
             <div class="download-card">
                 <div class="card-header">
                     <div class="card-icon installer">
@@ -633,7 +633,7 @@
             </div>
         </div>
         
-        <!-- 系统要求部分 -->
+        
         <div class="requirements-section">
             <h2 class="section-title">系统要求</h2>
             <div class="requirements-grid">
@@ -703,7 +703,7 @@
             </div>
         </div>
         
-        <!-- 安装指南 -->
+        
         <div class="installation-guide">
             <h2 class="section-title">安装指南</h2>
             <ol class="steps-list">
@@ -740,7 +740,7 @@ feisharp hello.fsc</div>
             </ol>
         </div>
         
-        <!-- 底部信息 -->
+        
         <div class="footer">
             <div class="footer-links">
                 <a href="#">许可证</a>
@@ -757,24 +757,24 @@ feisharp hello.fsc</div>
     </div>
     
     <script>
-        // 添加简单的交互效果
+        
         document.addEventListener('DOMContentLoaded', function() {
-            // 下载按钮点击动画
+            
             const downloadButtons = document.querySelectorAll('.download-button');
             downloadButtons.forEach(button => {
                 button.addEventListener('click', function(e) {
-                    // 添加点击反馈
+                    
                     this.style.transform = 'scale(0.95)';
                     setTimeout(() => {
                         this.style.transform = '';
                     }, 200);
                     
-                    // 记录下载统计（这里可以添加实际的统计代码）
+                    
                     console.log(`下载: ${this.getAttribute('href')}`);
                 });
             });
             
-            // 卡片悬停效果增强
+            
             const cards = document.querySelectorAll('.download-card');
             cards.forEach(card => {
                 card.addEventListener('mouseenter', function() {
@@ -785,7 +785,7 @@ feisharp hello.fsc</div>
                 });
             });
             
-            // 其他下载选项悬停效果
+            
             const otherDownloads = document.querySelectorAll('.requirements-section a');
             otherDownloads.forEach(link => {
                 link.addEventListener('mouseenter', function() {

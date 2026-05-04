@@ -31,7 +31,7 @@
             line-height: 1.6;
         }
         
-        /* 顶部导航 */
+        
         .top-nav {
             background-color: white;
             border-bottom: 1px solid var(--border-color);
@@ -78,7 +78,7 @@
             border-bottom: 2px solid var(--primary-color);
         }
         
-        /* 主容器 */
+        
         .container {
             max-width: 1400px;
             margin: 0 auto;
@@ -87,7 +87,7 @@
             gap: 40px;
         }
         
-        /* 左侧导航 */
+        
         .left-nav {
             width: 280px;
             background-color: white;
@@ -143,7 +143,7 @@
             border-left: 3px solid var(--primary-color);
         }
         
-        /* 主要内容 */
+        
         .main-content {
             flex: 1;
             padding: 30px 0;
@@ -172,7 +172,7 @@
             line-height: 1.6;
         }
         
-        /* 内容卡片 */
+        
         .content-section {
             background-color: white;
             border-radius: 4px;
@@ -204,7 +204,6 @@
             color: var(--text-color);
         }
         
-        /* 错误信息样式 */
         .error-severity {
             display: inline-block;
             padding: 2px 8px;
@@ -260,7 +259,7 @@
             line-height: 1.6;
         }
         
-        /* 代码块 */
+        
         .code-block {
             background-color: var(--code-bg);
             border-radius: 4px;
@@ -298,7 +297,7 @@
             padding-left: 10px;
         }
         
-        /* 注释和提示 */
+        
         .note {
             background-color: #fff4ce;
             border-left: 4px solid #ffb900;
@@ -341,7 +340,7 @@
             color: var(--primary-color);
         }
         
-        /* 表格 */
+        
         .error-table {
             width: 100%;
             border-collapse: collapse;
@@ -365,7 +364,7 @@
             background-color: rgba(0, 120, 212, 0.05);
         }
         
-        /* 右导航 */
+        
         .right-nav {
             width: 280px;
             padding-top: 30px;
@@ -402,7 +401,7 @@
             text-decoration: underline;
         }
         
-        /* 响应式设计 */
+        
         @media (max-width: 1200px) {
             .right-nav {
                 display: none;
@@ -427,7 +426,7 @@
             }
         }
         
-        /* 搜索框 */
+        
         .search-box {
             margin: 20px 0;
             position: relative;
@@ -446,7 +445,7 @@
             border-color: var(--primary-color);
         }
         
-        /* 错误编号 */
+        
         .error-id {
             font-family: 'Consolas', monospace;
             color: #666;
@@ -456,7 +455,7 @@
     </style>
 </head>
 <body>
-    <!-- 顶部导航 -->
+    
     <nav class="top-nav">
         <div class="logo">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="#0078d4">
@@ -473,9 +472,9 @@
         </div>
     </nav>
     
-    <!-- 主容器 -->
+    
     <div class="container">
-        <!-- 左侧导航 -->
+        
         <nav class="left-nav">
             <div class="search-box">
                 <input type="text" class="search-input" placeholder="搜索错误代码或描述...">
@@ -516,7 +515,7 @@
             </div>
         </nav>
         
-        <!-- 主要内容 -->
+        
         <main class="main-content">
             <div class="header">
                 <h1>FeiSharp 编译器错误和警告</h1>
@@ -533,12 +532,12 @@
                 </div>
             </div>
             
-            <!-- 词法分析错误 -->
+            
             <section id="lexer-errors" class="content-section">
                 <h2 class="section-title">词法分析错误 (1xxx)</h2>
                 <p>这些错误在词法分析阶段发生，当 Lexer 无法将源代码字符转换为有效的词法单元时触发。</p>
                 
-                <!-- FS1001 -->
+                
                 <div id="fs1001" class="error-item">
                     <div class="error-item-header">
                         <span class="error-severity error">错误</span>
@@ -578,7 +577,7 @@ print(message);</pre>
                     </div>
                 </div>
                 
-                <!-- FS1002 -->
+                
                 <div id="fs1002" class="error-item">
                     <div class="error-item-header">
                         <span class="error-severity error">错误</span>
@@ -612,7 +611,7 @@ print(message);</pre>
                     </div>
                 </div>
                 
-                <!-- FS1003 -->
+                
                 <div id="fs1003" class="error-item">
                     <div class="error-item-header">
                         <span class="error-severity error">错误</span>
@@ -643,7 +642,7 @@ var c = 1.2.3;      // 错误：无效的数字格式</pre>
                     </div>
                 </div>
                 
-                <!-- FS1004 -->
+                
                 <div id="fs1004" class="error-item">
                     <div class="error-item-header">
                         <span class="error-severity warning">警告</span>
@@ -685,12 +684,12 @@ _index++;</pre>
                 </div>
             </section>
             
-            <!-- 语法分析错误 -->
+            
             <section id="parser-errors" class="content-section">
                 <h2 class="section-title">语法分析错误 (2xxx)</h2>
                 <p>这些错误在语法分析阶段发生，当 Parser 无法根据语法规则构建语法树时触发。</p>
                 
-                <!-- FS2001 -->
+                
                 <div id="fs2001" class="error-item">
                     <div class="error-item-header">
                         <span class="error-severity error">错误</span>
@@ -726,7 +725,7 @@ print(x + y)</pre>
                     </div>
                 </div>
                 
-                <!-- FS2002 -->
+                
                 <div id="fs2002" class="error-item">
                     <div class="error-item-header">
                         <span class="error-severity error">错误</span>
@@ -776,7 +775,7 @@ private void ExpectPunctuation(string expected)
                     </div>
                 </div>
                 
-                <!-- FS2003 -->
+                
                 <div id="fs2003" class="error-item">
                     <div class="error-item-header">
                         <span class="error-severity error">错误</span>
@@ -813,7 +812,7 @@ iend;</pre>
                     </div>
                 </div>
                 
-                <!-- FS2004 -->
+                
                 <div id="fs2004" class="error-item">
                     <div class="error-item-header">
                         <span class="error-severity error">错误</span>
@@ -852,12 +851,12 @@ wend;           // 错误：应该是 iend</pre>
                 </div>
             </section>
             
-            <!-- 语义错误 -->
+            
             <section id="semantic-errors" class="content-section">
                 <h2 class="section-title">语义错误 (3xxx)</h2>
                 <p>这些错误在语义分析阶段发生，代码语法正确但含义有问题。</p>
                 
-                <!-- FS3001 -->
+                
                 <div id="fs3001" class="error-item">
                     <div class="error-item-header">
                         <span class="error-severity error">错误</span>
@@ -902,7 +901,7 @@ print(x + y);      // 正确：使用已声明的变量</pre>
                     </div>
                 </div>
                 
-                <!-- FS3002 -->
+                
                 <div id="fs3002" class="error-item">
                     <div class="error-item-header">
                         <span class="error-severity error">错误</span>
@@ -936,7 +935,7 @@ var b = a + 1;     // 错误：布尔值和数字不能相加</pre>
                     </div>
                 </div>
                 
-                <!-- FS3003 -->
+                
                 <div id="fs3003" class="error-item">
                     <div class="error-item-header">
                         <span class="error-severity error">错误</span>
@@ -972,12 +971,12 @@ var result2 = add(1, 2, 3);    // 错误：多了一个参数</pre>
                 </div>
             </section>
             
-            <!-- 运行时错误 -->
+            
             <section id="runtime-errors" class="content-section">
                 <h2 class="section-title">运行时错误 (4xxx)</h2>
                 <p>这些错误在代码执行期间发生。</p>
                 
-                <!-- FS4001 -->
+                
                 <div id="fs4001" class="error-item">
                     <div class="error-item-header">
                         <span class="error-severity error">错误</span>
@@ -1025,7 +1024,7 @@ iend;</pre>
                     </div>
                 </div>
                 
-                <!-- FS4002 -->
+                
                 <div id="fs4002" class="error-item">
                     <div class="error-item-header">
                         <span class="error-severity error">错误</span>
@@ -1042,11 +1041,11 @@ iend;</pre>
                             <div class="code-block-title">示例代码</div>
                         </div>
                         <pre>var obj = null;
-var value = obj.property;     // 运行时错误：空引用</pre>
+var value = obj;     // 运行时错误：空引用</pre>
                     </div>
                 </div>
                 
-                <!-- FS4003 -->
+                
                 <div id="fs4003" class="error-item">
                     <div class="error-item-header">
                         <span class="error-severity error">错误</span>
@@ -1068,12 +1067,12 @@ var value = arr[5];           // 运行时错误：索引越界</pre>
                 </div>
             </section>
             
-            <!-- 编译器警告 -->
+            
             <section id="warnings" class="content-section">
                 <h2 class="section-title">编译器警告 (5xxx)</h2>
                 <p>这些是编译器警告，代码可以编译和执行，但可能存在潜在问题。</p>
                 
-                <!-- FS5001 -->
+                
                 <div id="fs5001" class="error-item">
                     <div class="error-item-header">
                         <span class="error-severity warning">警告</span>
@@ -1094,7 +1093,7 @@ var y = x + 50;     // 警告：字符串和数字相加</pre>
                     </div>
                 </div>
                 
-                <!-- FS5002 -->
+                
                 <div id="fs5002" class="error-item">
                     <div class="error-item-header">
                         <span class="error-severity warning">警告</span>
@@ -1110,13 +1109,13 @@ var y = x + 50;     // 警告：字符串和数字相加</pre>
                         <div class="code-block-header">
                             <div class="code-block-title">示例代码</div>
                         </div>
-                        <pre>var unused = 10;    // 警告：变量未使用
+                        <pre>var unused = 10;    
 var x = 5;
 print(x);</pre>
                     </div>
                 </div>
                 
-                <!-- FS5003 -->
+                
                 <div id="fs5003" class="error-item">
                     <div class="error-item-header">
                         <span class="error-severity warning">警告</span>
@@ -1138,13 +1137,13 @@ fbegin:
     ibegin:
         return true;
     iend:
-    // 警告：如果 x <= 0，函数没有返回值
+    
 fend;</pre>
                     </div>
                 </div>
             </section>
             
-            <!-- 错误代码参考表 -->
+            
             <section class="content-section">
                 <h2 class="section-title">错误代码快速参考</h2>
                 
@@ -1247,7 +1246,7 @@ fend;</pre>
             </section>
         </main>
         
-        <!-- 右导航 -->
+        
         <aside class="right-nav">
             <div class="right-nav-title">本页内容</div>
             <ul class="right-nav-list">
@@ -1278,33 +1277,32 @@ fend;</pre>
     </div>
     
     <script>
-        // 平滑滚动和导航高亮
         document.addEventListener('DOMContentLoaded', function() {
-            // 左侧导航点击
+            
             const leftNavItems = document.querySelectorAll('.left-nav-item a');
             const rightNavItems = document.querySelectorAll('.right-nav-item a');
             const sections = document.querySelectorAll('.content-section');
             const errorItems = document.querySelectorAll('.error-item');
             
-            // 合并所有导航项
+            
             const allNavItems = [...leftNavItems, ...rightNavItems];
             
-            // 导航点击事件
+            
             allNavItems.forEach(item => {
                 item.addEventListener('click', function(e) {
                     e.preventDefault();
                     
-                    // 移除所有active类
+                    
                     leftNavItems.forEach(nav => {
                         nav.parentElement.classList.remove('active');
                     });
                     
-                    // 添加active类
+                    
                     if (this.parentElement.classList.contains('left-nav-item')) {
                         this.parentElement.classList.add('active');
                     }
                     
-                    // 滚动到对应部分
+                    
                     const targetId = this.getAttribute('href');
                     if(targetId.indexOf('#') == -1){
                         location.href = targetId;
@@ -1321,11 +1319,11 @@ fend;</pre>
                 });
             });
             
-            // 滚动时更新导航高亮
+            
             window.addEventListener('scroll', function() {
                 let current = '';
                 
-                // 先检查具体的错误项
+                
                 errorItems.forEach(item => {
                     const itemTop = item.offsetTop;
                     const itemHeight = item.clientHeight;
@@ -1335,7 +1333,7 @@ fend;</pre>
                     }
                 });
                 
-                // 如果没有匹配的错误项，检查节
+                
                 if (!current) {
                     sections.forEach(section => {
                         const sectionTop = section.offsetTop;
@@ -1347,7 +1345,7 @@ fend;</pre>
                     });
                 }
                 
-                // 更新左侧导航
+                
                 leftNavItems.forEach(item => {
                     item.parentElement.classList.remove('active');
                     const href = item.getAttribute('href');
@@ -1357,21 +1355,21 @@ fend;</pre>
                 });
             });
             
-            // 搜索功能
+            
             const searchInput = document.querySelector('.search-input');
             if (searchInput) {
                 searchInput.addEventListener('input', function() {
                     const searchTerm = this.value.toLowerCase().trim();
                     
                     if (searchTerm.length < 2) {
-                        // 显示所有项
+                        
                         leftNavItems.forEach(item => {
                             item.parentElement.style.display = 'block';
                         });
                         return;
                     }
                     
-                    // 过滤导航项
+                    
                     leftNavItems.forEach(item => {
                         const text = item.textContent.toLowerCase();
                         const href = item.getAttribute('href');
@@ -1379,7 +1377,7 @@ fend;</pre>
                         
                         let shouldShow = text.includes(searchTerm);
                         
-                        // 如果导航文本不匹配，检查目标内容
+                        
                         if (!shouldShow && targetElement) {
                             const content = targetElement.textContent.toLowerCase();
                             shouldShow = content.includes(searchTerm);

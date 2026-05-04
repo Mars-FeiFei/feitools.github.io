@@ -29,7 +29,7 @@
             color: var(--text-color);
         }
         
-        /* 侧边栏导航 */
+        
         .sidebar {
             width: 280px;
             background-color: var(--sidebar-bg);
@@ -99,7 +99,7 @@
             border-left: 3px solid var(--primary-color);
         }
         
-        /* 主内容区 */
+        
         .main-content {
             flex: 1;
             margin-left: 280px;
@@ -134,7 +134,7 @@
             margin: 0 5px;
         }
         
-        /* 内容卡片 */
+        
         .content-section {
             background-color: white;
             border-radius: 8px;
@@ -236,7 +236,7 @@
             color: var(--primary-color);
         }
         
-        /* 响应式设计 */
+        
         @media (max-width: 1024px) {
             .sidebar {
                 width: 240px;
@@ -266,7 +266,7 @@
     </style>
 </head>
 <body>
-    <!-- 侧边栏导航 -->
+    
     <nav class="sidebar">
         <div class="sidebar-header">
             <h1>FeiSharp Parser</h1>
@@ -315,7 +315,7 @@
         </div>
     </nav>
     
-    <!-- 主内容区 -->
+    
     <main class="main-content">
         <div class="header">
             <h1>FeiSharp Parser 文档</h1>
@@ -326,7 +326,7 @@
             </div>
         </div>
         
-        <!-- 概述部分 -->
+        
         <section id="overview" class="content-section">
             <h2 class="section-title">Parser 概述</h2>
             <p>FeiSharp Parser 是一个用于解析和执行 FeiSharp 脚本语言的解析器。它支持变量声明、函数定义、控制流、类系统以及多种内置功能。</p>
@@ -347,7 +347,7 @@
             </div>
         </section>
         
-        <!-- 架构设计 -->
+        
         <section id="architecture" class="content-section">
             <h2 class="section-title">架构设计</h2>
             <p>Parser 采用递归下降解析器设计模式，包含以下核心组件：</p>
@@ -376,7 +376,7 @@ _variables.NewAdd("buildVersion", "8.0");</pre>
             </div>
         </section>
         
-        <!-- 关键字语法 -->
+        
         <section id="keywords" class="content-section">
             <h2 class="section-title">关键字语法</h2>
             <p>FeiSharp 支持以下关键字，每个关键字都有特定的语法格式：</p>
@@ -459,7 +459,7 @@ print(result);</pre>
             </div>
         </section>
         
-        <!-- 数学函数 -->
+        
         <section id="math-functions" class="content-section">
             <h2 class="section-title">数学函数</h2>
             <p>FeiSharp 提供了一系列内置数学函数：</p>
@@ -522,7 +522,7 @@ var root = sqrt(16, 2);  // root = 4;</pre>
             </div>
         </section>
         
-        <!-- 字符串函数 -->
+        
         <section id="string-functions" class="content-section">
             <h2 class="section-title">字符串函数</h2>
             <p>字符串处理函数：</p>
@@ -580,7 +580,7 @@ cstr(123, "strValue");  // strValue = "123";</pre>
             </div>
         </section>
         
-        <!-- I/O 操作 -->
+        
         <section id="io-operations" class="content-section">
             <h2 class="section-title">I/O 操作</h2>
             <p>文件读写和用户输入操作需要导入相应命名空间：</p>
@@ -651,7 +651,7 @@ export("Hello World" as "output.txt");
 readline("userInput");</pre>
             </div>
         </section>
-        <!-- 命名空间 -->
+        
         <section id="namespaces" class="content-section">
             <h2 class="section-title">命名空间</h2>
             <p>FeiSharp 使用命名空间来组织功能模块：</p>
@@ -717,7 +717,7 @@ gethtml("https://example.com", "htmlContent");</pre>
             </div>
         </section>
         
-        <!-- 示例代码 -->
+        
         <section id="basic-examples" class="content-section">
             <h2 class="section-title">示例代码</h2>
             
@@ -733,25 +733,25 @@ gethtml("https://example.com", "htmlContent");</pre>
     </main>
     
     <script>
-        // 平滑滚动和导航高亮
+        
         document.addEventListener('DOMContentLoaded', function() {
             const navItems = document.querySelectorAll('.nav-item a');
             const sections = document.querySelectorAll('.content-section');
             
-            // 导航点击事件
+            
             navItems.forEach(item => {
                 item.addEventListener('click', function(e) {
                     e.preventDefault();
                     
-                    // 移除所有active类
+                    
                     navItems.forEach(nav => {
                         nav.parentElement.classList.remove('active');
                     });
                     
-                    // 添加active类
+                    
                     this.parentElement.classList.add('active');
                     
-                    // 滚动到对应部分
+                    
                     const targetId = this.getAttribute('href');
                     if (targetId !== '#') {
                         const targetSection = document.querySelector(targetId);
@@ -765,7 +765,7 @@ gethtml("https://example.com", "htmlContent");</pre>
                 });
             });
             
-            // 滚动时更新导航高亮
+            
             window.addEventListener('scroll', function() {
                 let current = '';
                 

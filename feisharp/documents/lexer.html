@@ -29,7 +29,6 @@
             color: var(--text-color);
         }
         
-        /* 侧边栏导航 */
         .sidebar {
             width: 280px;
             background-color: var(--sidebar-bg);
@@ -99,7 +98,6 @@
             border-left: 3px solid var(--primary-color);
         }
         
-        /* 主内容区 */
         .main-content {
             flex: 1;
             margin-left: 280px;
@@ -134,7 +132,6 @@
             margin: 0 5px;
         }
         
-        /* 内容卡片 */
         .content-section {
             background-color: white;
             border-radius: 8px;
@@ -245,7 +242,6 @@
             border-radius: 4px;
         }
         
-        /* 响应式设计 */
         @media (max-width: 1024px) {
             .sidebar {
                 width: 240px;
@@ -275,13 +271,11 @@
     </style>
 </head>
 <body>
-    <!-- 侧边栏导航 -->
     <nav class="sidebar">
         <div class="sidebar-header">
             <h1>FeiSharp Lexer</h1>
             <div class="sidebar-subtitle">版本 8.0</div>
         </div>
-        
         <div class="nav-section">
             <div class="nav-title">概述</div>
             <ul class="nav-list">
@@ -289,7 +283,6 @@
                 <li class="nav-item"><a href="#architecture">架构设计</a></li>
             </ul>
         </div>
-        
         <div class="nav-section">
             <div class="nav-title">词法单元</div>
             <ul class="nav-list">
@@ -300,7 +293,6 @@
                 <li class="nav-item"><a href="#identifiers">标识符</a></li>
             </ul>
         </div>
-        
         <div class="nav-section">
             <div class="nav-title">解析规则</div>
             <ul class="nav-list">
@@ -309,7 +301,6 @@
                 <li class="nav-item"><a href="#error-handling">错误处理</a></li>
             </ul>
         </div>
-        
         <div class="nav-section">
             <div class="nav-title">使用示例</div>
             <ul class="nav-list">
@@ -317,7 +308,6 @@
                 <li class="nav-item"><a href="#advanced-examples">高级示例</a></li>
             </ul>
         </div>
-        
         <div class="nav-section">
             <div class="nav-title">API 参考</div>
             <ul class="nav-list">
@@ -326,8 +316,6 @@
             </ul>
         </div>
     </nav>
-    
-    <!-- 主内容区 -->
     <main class="main-content">
         <div class="header">
             <h1>FeiSharp Lexer 文档</h1>
@@ -337,16 +325,12 @@
                 <span>Lexer 类</span>
             </div>
         </div>
-        
-        <!-- 概述部分 -->
         <section id="overview" class="content-section">
             <h2 class="section-title">Lexer 概述</h2>
             <p>FeiSharp Lexer 是 FeiSharp 编程语言的词法分析器，负责将源代码字符串分解为有意义的词法单元（Tokens）。它是编译器和解释器前端的重要组成部分。</p>
-            
             <div class="note">
                 <strong>注意：</strong> Lexer 是 FeiSharp 编译器/解释器的第一个阶段，将源代码转换为 Token 流供 Parser 使用。
             </div>
-            
             <div class="code-block">
                 <pre>namespace FeiSharpStudio;
 
@@ -368,12 +352,9 @@ public class Lexer
 }</pre>
             </div>
         </section>
-        
-        <!-- 架构设计 -->
         <section id="architecture" class="content-section">
             <h2 class="section-title">架构设计</h2>
             <p>Lexer 采用顺序扫描设计模式，逐个字符分析源代码并生成对应的 Token。</p>
-            
             <h3 class="subsection-title">核心数据结构</h3>
             <div class="syntax-block">
                 <ul>
@@ -382,7 +363,6 @@ public class Lexer
                     <li><strong>Token</strong>: 词法单元的数据结构，包含类型和值</li>
                 </ul>
             </div>
-            
             <h3 class="subsection-title">处理流程</h3>
             <ol style="margin-left: 20px; line-height: 1.8;">
                 <li>跳过空白字符（空格、制表符、换行符）</li>
@@ -394,12 +374,9 @@ public class Lexer
                 <li>返回 EndOfFile Token 表示解析完成</li>
             </ol>
         </section>
-        
-        <!-- Token 类型 -->
         <section id="token-types" class="content-section">
             <h2 class="section-title">Token 类型</h2>
             <p>FeiSharp Lexer 识别以下类型的词法单元：</p>
-            
             <table class="token-table">
                 <thead>
                     <tr>
@@ -454,7 +431,6 @@ public class Lexer
                     </tr>
                 </tbody>
             </table>
-            
             <div class="example">
                 <div class="example-title">Token 结构示例</div>
                 <pre>// Token 类的基本结构
@@ -471,12 +447,9 @@ public class Token
 }</pre>
             </div>
         </section>
-        
-        <!-- 标点符号 -->
         <section id="punctuation" class="content-section">
             <h2 class="section-title">标点符号</h2>
             <p>Lexer 识别以下标点符号：</p>
-            
             <div class="token-category">
                 <h3 class="subsection-title">基本标点</h3>
                 <table class="token-table">
@@ -516,7 +489,6 @@ public class Token
                     </tbody>
                 </table>
             </div>
-            
             <div class="token-category">
                 <h3 class="subsection-title">括号类</h3>
                 <table class="token-table">
@@ -561,13 +533,11 @@ public class Token
                     </tbody>
                 </table>
             </div>
-            
             <div class="note">
                 <strong>注意：</strong> 所有标点符号都是单字符 Token，遇到即立即返回。
             </div>
         </section>
         
-        <!-- 运算符 -->
         <section id="operators" class="content-section">
             <h2 class="section-title">运算符</h2>
             <p>Lexer 识别以下运算符：</p>
@@ -662,7 +632,7 @@ public class Token
             </div>
         </section>
         
-        <!-- 字面量 -->
+        
         <section id="literals" class="content-section">
             <h2 class="section-title">字面量</h2>
             
@@ -711,7 +681,7 @@ if (char.IsDigit(current))
             </div>
         </section>
         
-        <!-- 标识符和关键字 -->
+        
         <section id="identifiers" class="content-section">
             <h2 class="section-title">标识符和关键字</h2>
             
@@ -722,7 +692,7 @@ if (char.IsDigit(current))
 if (char.IsLetter(current))
 {
     int start = _index;
-    while (_index < _source.Length && char.IsLetterOrDigit(_source[_index]))
+    while (_index &lt; _source.Length && char.IsLetterOrDigit(_source[_index]))
         _index++;
     string identifier = _source[start.._index];
     if (FeiSharpKeywords.KeywordMap.TryGetValue(identifier, out Token keywordToken))
@@ -785,7 +755,7 @@ _private     // → Token(TokenTypes.Identifier, "_private")</pre>
             </div>
         </section>
         
-        <!-- 解析流程 -->
+        
         <section id="parsing-rules" class="content-section">
             <h2 class="section-title">解析流程</h2>
             
@@ -841,7 +811,7 @@ _private     // → Token(TokenTypes.Identifier, "_private")</pre>
             </div>
         </section>
         
-        <!-- 关键字识别 -->
+        
         <section id="keyword-recognition" class="content-section">
             <h2 class="section-title">关键字识别</h2>
             
@@ -872,7 +842,7 @@ public static class FeiSharpKeywords
             </div>
         </section>
         
-        <!-- 错误处理 -->
+        
         <section id="error-handling" class="content-section">
             <h2 class="section-title">错误处理</h2>
             
@@ -899,7 +869,7 @@ _index++;</pre>
             </div>
         </section>
         
-        <!-- 基础用法 -->
+        
         <section id="basic-usage" class="content-section">
             <h2 class="section-title">基础用法</h2>
             
@@ -942,7 +912,7 @@ print(message);
             </div>
         </section>
         
-        <!-- 高级示例 -->
+        
         <section id="advanced-examples" class="content-section">
             <h2 class="section-title">高级示例</h2>
             
@@ -999,7 +969,7 @@ var result = (x + y) * 3.14 / 2;
             </div>
         </section>
         
-        <!-- API 参考 -->
+        
         <section id="constructor" class="content-section">
             <h2 class="section-title">构造函数</h2>
             
@@ -1023,7 +993,7 @@ public Lexer(string source)
             </div>
         </section>
         
-        <!-- 方法列表 -->
+        
         <section id="methods" class="content-section">
             <h2 class="section-title">方法列表</h2>
             
@@ -1067,25 +1037,25 @@ public Token NextToken()
     </main>
     
     <script>
-        // 平滑滚动和导航高亮
+        
         document.addEventListener('DOMContentLoaded', function() {
             const navItems = document.querySelectorAll('.nav-item a');
             const sections = document.querySelectorAll('.content-section');
             
-            // 导航点击事件
+            
             navItems.forEach(item => {
                 item.addEventListener('click', function(e) {
                     e.preventDefault();
                     
-                    // 移除所有active类
+                    
                     navItems.forEach(nav => {
                         nav.parentElement.classList.remove('active');
                     });
                     
-                    // 添加active类
+                    
                     this.parentElement.classList.add('active');
                     
-                    // 滚动到对应部分
+                    
                     const targetId = this.getAttribute('href');
                     if (targetId !== '#') {
                         const targetSection = document.querySelector(targetId);
@@ -1099,7 +1069,7 @@ public Token NextToken()
                 });
             });
             
-            // 滚动时更新导航高亮
+            
             window.addEventListener('scroll', function() {
                 let current = '';
                 
