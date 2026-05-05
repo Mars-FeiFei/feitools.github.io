@@ -465,7 +465,7 @@
     </style>
 </head>
 <body>
-    <!-- 导航栏 -->
+    
     <header>
         <div class="container">
             <nav>
@@ -479,7 +479,7 @@
         </div>
     </header>
     
-    <!-- 英雄区域 -->
+    
     <section class="hero">
         <div class="hero-content container fade-in">
             <h1>探索末日的边界</h1>
@@ -488,7 +488,7 @@
         </div>
     </section>
     
-    <!-- 关于我们 -->
+    
     <section id="about" class="about">
         <div class="container">
             <h2 class="section-title fade-in">关于我们</h2>
@@ -504,7 +504,7 @@
         </div>
     </section>
     
-    <!-- 出版物 -->
+    
     <section id="publications" class="publications">
         <div class="container">
             <h2 class="section-title fade-in">精选出版物</h2>
@@ -537,7 +537,7 @@
         </div>
     </section>
     
-    <!-- 书籍详情模态框 -->
+    
     <div id="bookModal" class="book-modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -561,7 +561,7 @@
         </div>
     </div>
     
-    <!-- 联系我们 -->
+    
     <section id="contact" class="contact">
         <div class="container">
             <h2 class="section-title fade-in">联系我们</h2>
@@ -585,7 +585,7 @@
         </div>
     </section>
     
-    <!-- 页脚 -->
+    
     <footer>
         <div class="container">
             <div class="footer-content">
@@ -601,12 +601,12 @@
         </div>
     </footer>
     
-    <!-- Font Awesome 图标库 -->
+    
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     
-    <!-- 自定义JavaScript -->
+    
     <script>
-        // 表单提交处理
+        
         document.getElementById('contactForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const name = document.getElementById('name').value;
@@ -622,7 +622,7 @@
             this.reset();
         });
         
-        // 滚动动画
+        
         document.addEventListener('DOMContentLoaded', function() {
             const fadeElements = document.querySelectorAll('.fade-in');
             
@@ -640,7 +640,7 @@
                 fadeObserver.observe(element);
             });
             
-            // 平滑滚动
+            
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -658,7 +658,7 @@
             });
         });
         
-        // 书籍详情模态框功能
+        
         function openBookModal(title, subtitle, price, coverImage, author, description) {
             const modal = document.getElementById('bookModal');
             document.getElementById('modalBookTitle').textContent = title;
@@ -668,7 +668,7 @@
             document.getElementById('modalBookDescription').textContent = description;
             document.getElementById('modalBookCover').style.backgroundImage = `url('${coverImage}')`;
             
-            // 设置下载和阅读链接
+            
             document.getElementById('readBookBtn').href = `#read-${title.replace(/\s+/g, '-').toLowerCase()}`;
             document.getElementById('downloadBookBtn').href = `#download-${title.replace(/\s+/g, '-').toLowerCase()}`;
             
@@ -681,7 +681,7 @@
             document.body.style.overflow = 'auto';
         }
         
-        // 点击模态框外部关闭
+        
         window.onclick = function(event) {
             const modal = document.getElementById('bookModal');
             if (event.target == modal) {
@@ -689,7 +689,7 @@
             }
         }
         
-        // 按ESC键关闭模态框
+        
         document.onkeydown = function(evt) {
             evt = evt || window.event;
             if (evt.key === "Escape") {

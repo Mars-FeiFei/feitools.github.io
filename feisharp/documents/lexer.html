@@ -29,6 +29,7 @@
             color: var(--text-color);
         }
         
+        
         .sidebar {
             width: 280px;
             background-color: var(--sidebar-bg);
@@ -98,6 +99,7 @@
             border-left: 3px solid var(--primary-color);
         }
         
+        
         .main-content {
             flex: 1;
             margin-left: 280px;
@@ -131,6 +133,7 @@
         .breadcrumb span {
             margin: 0 5px;
         }
+        
         
         .content-section {
             background-color: white;
@@ -242,6 +245,7 @@
             border-radius: 4px;
         }
         
+        
         @media (max-width: 1024px) {
             .sidebar {
                 width: 240px;
@@ -271,11 +275,13 @@
     </style>
 </head>
 <body>
+    
     <nav class="sidebar">
         <div class="sidebar-header">
             <h1>FeiSharp Lexer</h1>
             <div class="sidebar-subtitle">版本 8.0</div>
         </div>
+        
         <div class="nav-section">
             <div class="nav-title">概述</div>
             <ul class="nav-list">
@@ -283,6 +289,7 @@
                 <li class="nav-item"><a href="#architecture">架构设计</a></li>
             </ul>
         </div>
+        
         <div class="nav-section">
             <div class="nav-title">词法单元</div>
             <ul class="nav-list">
@@ -293,6 +300,7 @@
                 <li class="nav-item"><a href="#identifiers">标识符</a></li>
             </ul>
         </div>
+        
         <div class="nav-section">
             <div class="nav-title">解析规则</div>
             <ul class="nav-list">
@@ -301,6 +309,7 @@
                 <li class="nav-item"><a href="#error-handling">错误处理</a></li>
             </ul>
         </div>
+        
         <div class="nav-section">
             <div class="nav-title">使用示例</div>
             <ul class="nav-list">
@@ -308,6 +317,7 @@
                 <li class="nav-item"><a href="#advanced-examples">高级示例</a></li>
             </ul>
         </div>
+        
         <div class="nav-section">
             <div class="nav-title">API 参考</div>
             <ul class="nav-list">
@@ -316,6 +326,8 @@
             </ul>
         </div>
     </nav>
+    
+    
     <main class="main-content">
         <div class="header">
             <h1>FeiSharp Lexer 文档</h1>
@@ -325,12 +337,16 @@
                 <span>Lexer 类</span>
             </div>
         </div>
+        
+        
         <section id="overview" class="content-section">
             <h2 class="section-title">Lexer 概述</h2>
             <p>FeiSharp Lexer 是 FeiSharp 编程语言的词法分析器，负责将源代码字符串分解为有意义的词法单元（Tokens）。它是编译器和解释器前端的重要组成部分。</p>
+            
             <div class="note">
                 <strong>注意：</strong> Lexer 是 FeiSharp 编译器/解释器的第一个阶段，将源代码转换为 Token 流供 Parser 使用。
             </div>
+            
             <div class="code-block">
                 <pre>namespace FeiSharpStudio;
 
@@ -352,9 +368,12 @@ public class Lexer
 }</pre>
             </div>
         </section>
+        
+        
         <section id="architecture" class="content-section">
             <h2 class="section-title">架构设计</h2>
             <p>Lexer 采用顺序扫描设计模式，逐个字符分析源代码并生成对应的 Token。</p>
+            
             <h3 class="subsection-title">核心数据结构</h3>
             <div class="syntax-block">
                 <ul>
@@ -363,6 +382,7 @@ public class Lexer
                     <li><strong>Token</strong>: 词法单元的数据结构，包含类型和值</li>
                 </ul>
             </div>
+            
             <h3 class="subsection-title">处理流程</h3>
             <ol style="margin-left: 20px; line-height: 1.8;">
                 <li>跳过空白字符（空格、制表符、换行符）</li>
@@ -374,9 +394,12 @@ public class Lexer
                 <li>返回 EndOfFile Token 表示解析完成</li>
             </ol>
         </section>
+        
+        
         <section id="token-types" class="content-section">
             <h2 class="section-title">Token 类型</h2>
             <p>FeiSharp Lexer 识别以下类型的词法单元：</p>
+            
             <table class="token-table">
                 <thead>
                     <tr>
@@ -431,6 +454,7 @@ public class Lexer
                     </tr>
                 </tbody>
             </table>
+            
             <div class="example">
                 <div class="example-title">Token 结构示例</div>
                 <pre>// Token 类的基本结构
@@ -447,9 +471,12 @@ public class Token
 }</pre>
             </div>
         </section>
+        
+        
         <section id="punctuation" class="content-section">
             <h2 class="section-title">标点符号</h2>
             <p>Lexer 识别以下标点符号：</p>
+            
             <div class="token-category">
                 <h3 class="subsection-title">基本标点</h3>
                 <table class="token-table">
@@ -489,6 +516,7 @@ public class Token
                     </tbody>
                 </table>
             </div>
+            
             <div class="token-category">
                 <h3 class="subsection-title">括号类</h3>
                 <table class="token-table">
@@ -533,10 +561,12 @@ public class Token
                     </tbody>
                 </table>
             </div>
+            
             <div class="note">
                 <strong>注意：</strong> 所有标点符号都是单字符 Token，遇到即立即返回。
             </div>
         </section>
+        
         
         <section id="operators" class="content-section">
             <h2 class="section-title">运算符</h2>
@@ -692,7 +722,7 @@ if (char.IsDigit(current))
 if (char.IsLetter(current))
 {
     int start = _index;
-    while (_index &lt; _source.Length && char.IsLetterOrDigit(_source[_index]))
+    while (_index < _source.Length && char.IsLetterOrDigit(_source[_index]))
         _index++;
     string identifier = _source[start.._index];
     if (FeiSharpKeywords.KeywordMap.TryGetValue(identifier, out Token keywordToken))

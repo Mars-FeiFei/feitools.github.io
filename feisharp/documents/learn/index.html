@@ -204,6 +204,7 @@
             color: var(--text-color);
         }
         
+        
         .error-severity {
             display: inline-block;
             padding: 2px 8px;
@@ -1041,7 +1042,7 @@ iend;</pre>
                             <div class="code-block-title">示例代码</div>
                         </div>
                         <pre>var obj = null;
-var value = obj;     // 运行时错误：空引用</pre>
+var value = obj.property;     // 运行时错误：空引用</pre>
                     </div>
                 </div>
                 
@@ -1109,7 +1110,7 @@ var y = x + 50;     // 警告：字符串和数字相加</pre>
                         <div class="code-block-header">
                             <div class="code-block-title">示例代码</div>
                         </div>
-                        <pre>var unused = 10;    
+                        <pre>var unused = 10;    // 警告：变量未使用
 var x = 5;
 print(x);</pre>
                     </div>
@@ -1137,7 +1138,7 @@ fbegin:
     ibegin:
         return true;
     iend:
-    
+    // 警告：如果 x &lt;= 0，函数没有返回值
 fend;</pre>
                     </div>
                 </div>
@@ -1277,6 +1278,7 @@ fend;</pre>
     </div>
     
     <script>
+        
         document.addEventListener('DOMContentLoaded', function() {
             
             const leftNavItems = document.querySelectorAll('.left-nav-item a');

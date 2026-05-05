@@ -31,7 +31,7 @@
             min-height: 100vh;
         }
         
-        
+        /* 顶部导航 */
         .top-nav {
             background-color: white;
             border-bottom: 1px solid var(--border-color);
@@ -103,14 +103,14 @@
             font-size: 14px;
         }
         
-        
+        /* 主容器 */
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 40px 20px;
         }
         
-        
+        /* 页面标题 */
         .page-header {
             text-align: center;
             margin-bottom: 50px;
@@ -134,7 +134,7 @@
             margin: 0 auto;
         }
         
-        
+        /* 下载卡片网格 */
         .download-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -280,7 +280,7 @@
             font-size: 18px;
         }
         
-        
+        /* 系统要求部分 */
         .requirements-section {
             background-color: var(--card-bg);
             border-radius: 8px;
@@ -336,7 +336,7 @@
             font-size: 14px;
         }
         
-        
+        /* 安装指南 */
         .installation-guide {
             background-color: var(--card-bg);
             border-radius: 8px;
@@ -399,7 +399,7 @@
             margin-top: 10px;
         }
         
-        
+        /* 底部信息 */
         .footer {
             text-align: center;
             margin-top: 60px;
@@ -425,7 +425,7 @@
             text-decoration: underline;
         }
         
-        
+        /* 响应式设计 */
         @media (max-width: 768px) {
             .download-grid {
                 grid-template-columns: 1fr;
@@ -757,24 +757,24 @@ feisharp hello.fsc</div>
     </div>
     
     <script>
-        
+        // 添加简单的交互效果
         document.addEventListener('DOMContentLoaded', function() {
-            
+            // 下载按钮点击动画
             const downloadButtons = document.querySelectorAll('.download-button');
             downloadButtons.forEach(button => {
                 button.addEventListener('click', function(e) {
-                    
+                    // 添加点击反馈
                     this.style.transform = 'scale(0.95)';
                     setTimeout(() => {
                         this.style.transform = '';
                     }, 200);
                     
-                    
+                    // 记录下载统计（这里可以添加实际的统计代码）
                     console.log(`下载: ${this.getAttribute('href')}`);
                 });
             });
             
-            
+            // 卡片悬停效果增强
             const cards = document.querySelectorAll('.download-card');
             cards.forEach(card => {
                 card.addEventListener('mouseenter', function() {
@@ -785,7 +785,7 @@ feisharp hello.fsc</div>
                 });
             });
             
-            
+            // 其他下载选项悬停效果
             const otherDownloads = document.querySelectorAll('.requirements-section a');
             otherDownloads.forEach(link => {
                 link.addEventListener('mouseenter', function() {

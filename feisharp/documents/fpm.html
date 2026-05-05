@@ -32,6 +32,7 @@
             color: var(--text-color);
         }
         
+        
         .sidebar {
             width: 280px;
             background-color: var(--sidebar-bg);
@@ -112,6 +113,7 @@
             border-left: 3px solid var(--primary-color);
         }
         
+        
         .main-content {
             flex: 1;
             margin-left: 280px;
@@ -145,6 +147,7 @@
         .breadcrumb span {
             margin: 0 5px;
         }
+        
         
         .content-section {
             background-color: white;
@@ -256,6 +259,7 @@
             color: var(--primary-color);
             font-size: 16px;
         }
+        
         
         .ui-preview {
             background-color: #1e1e2f;
@@ -390,11 +394,13 @@
     </style>
 </head>
 <body>
+    
     <nav class="sidebar">
         <div class="sidebar-header">
             <h1>FeiSharp fpm <span class="badge">v2.0</span></h1>
             <div class="sidebar-subtitle">包管理系统 & 图形界面</div>
         </div>
+        
         <div class="nav-section">
             <div class="nav-title">概述</div>
             <ul class="nav-list">
@@ -402,6 +408,7 @@
                 <li class="nav-item"><a href="#installation">安装与配置</a></li>
             </ul>
         </div>
+        
         <div class="nav-section">
             <div class="nav-title">命令行参考 (CLI)</div>
             <ul class="nav-list">
@@ -413,6 +420,7 @@
                 <li class="nav-item"><a href="#cmd-list">fpm list</a></li>
             </ul>
         </div>
+        
         <div class="nav-section">
             <div class="nav-title">图形界面 (fpmui)</div>
             <ul class="nav-list">
@@ -421,6 +429,7 @@
                 <li class="nav-item"><a href="#ui-usage">使用指南</a></li>
             </ul>
         </div>
+        
         <div class="nav-section">
             <div class="nav-title">开发与扩展</div>
             <ul class="nav-list">
@@ -429,6 +438,8 @@
             </ul>
         </div>
     </nav>
+    
+    
     <main class="main-content">
         <div class="header">
             <h1>FeiSharp fpm 包管理器</h1>
@@ -437,9 +448,12 @@
                 <span>fpm & fpmui</span>
             </div>
         </div>
+        
+        
         <section id="overview" class="content-section">
             <h2 class="section-title">fpm 介绍</h2>
             <p><strong>fpm (FeiSharp Package Manager)</strong> 是 FeiSharp 编程语言的官方包管理工具，用于安装、搜索、管理第三方库和应用程序。fpm 支持命令行操作（fpm.exe）和图形化界面（fpmui.exe），满足不同开发场景的需求。</p>
+            
             <div class="grid-2col">
                 <div class="note">
                     <strong>📦 核心特性</strong>
@@ -459,6 +473,7 @@
                     </ul>
                 </div>
             </div>
+            
             <div class="code-block">
                 <pre># 基本工作流
 fpm install feisharp_vscode_extension      # 安装包
@@ -467,6 +482,8 @@ fpm list all                   # 查看已安装包
 fpm remove feisharp_vscode_extension       # 卸载包</pre>
             </div>
         </section>
+        
+        
         <section id="installation" class="content-section">
             <h2 class="section-title">安装与配置</h2>
             <p>fpm 随 FeiSharp SDK 一起发布，安装 SDK 后自动可用。确保 <code>%ProgramFiles%\FeiSharpSDK10</code> 已添加到系统 PATH 环境变量中。</p>
@@ -475,6 +492,8 @@ fpm remove feisharp_vscode_extension       # 卸载包</pre>
 fpm source default    # 切换成默认源</pre>
             </div>
         </section>
+        
+        
         <section id="cmd-install" class="content-section">
             <h2 class="section-title">📦 fpm install</h2>
             <p>安装一个或多个包到当前环境。</p>
@@ -489,6 +508,7 @@ fpm source default    # 切换成默认源</pre>
 ⬇️ 下载 feisharp_vscode_extension v3.2.1 ... 完成
 ✅ 成功安装 2 个包</pre></div>
         </section>
+        
         <section id="cmd-search" class="content-section">
             <h2 class="section-title">🔍 fpm search</h2>
             <p>按类型和关键字搜索包。</p>
@@ -502,6 +522,7 @@ fpm source default    # 切换成默认源</pre>
             <div class="example"><div class="example-title">实例</div><pre>PS> fpm search All console
 CS_Console</pre></div>
         </section>
+        
         <section id="cmd-get" class="content-section">
             <h2 class="section-title">ℹ️ fpm get</h2>
             <p>获取包的详细信息。</p>
@@ -516,10 +537,11 @@ CS_Console</pre></div>
 名称: calcfunc
 版本: 2.0.1
 类型: fsc
-依赖: $prelude.fsc
+依赖: $prelude
 描述: 高性能计算库
             </pre></div>
         </section>
+        
         <section id="cmd-remove" class="content-section">
             <h2 class="section-title">🗑️ fpm remove</h2>
             <p>卸载已安装的包。</p>
@@ -531,6 +553,7 @@ CS_Console</pre></div>
             </table>
             <div class="warning">⚠️ 卸载依赖其他包的组件时，fpm 会发出确认提示。</div>
         </section>
+        
         <section id="cmd-source" class="content-section">
             <h2 class="section-title">🌐 fpm source</h2>
             <p>配置包仓库源地址。</p>
@@ -541,6 +564,7 @@ CS_Console</pre></div>
                 </tbody>
             </table>
         </section>
+        
         <section id="cmd-list" class="content-section">
             <h2 class="section-title">📋 fpm list</h2>
             <p>列出已安装的包。</p>
@@ -554,6 +578,8 @@ CS_Console</pre></div>
 ├── feisharp_vscode_extension v3.2.1
 └── calcfunc v0.9.2</pre></div>
         </section>
+        
+        
         <section id="ui-overview" class="content-section">
             <h2 class="section-title">🖥️ fpmui - 图形化包管理器</h2>
             <p>fpmui 是 fpm 的图形界面版本，提供直观的鼠标操作体验，适合不熟悉命令行的开发者或需要批量管理包的用户。</p>
@@ -581,6 +607,7 @@ CS_Console</pre></div>
             </div>
             <div class="note">fpmui 基于 Windows Forms 开发，支持 Native AOT 编译，启动迅速，占用内存低。</div>
         </section>
+        
         <section id="ui-features" class="content-section">
             <h2 class="section-title">✨ fpmui 功能模块</h2>
             <div class="grid-2col">
@@ -618,6 +645,7 @@ CS_Console</pre></div>
                 </div>
             </div>
         </section>
+        
         <section id="ui-usage" class="content-section">
             <h2 class="section-title">🚀 fpmui 使用指南</h2>
             <ol style="margin-left: 25px; line-height: 1.8;">
@@ -632,6 +660,8 @@ CS_Console</pre></div>
                 <strong>权限提示：</strong> 安装包到系统目录（如 Program Files）时，fpmui 会自动请求管理员权限。
             </div>
         </section>
+        
+        
         <section id="packaging" class="content-section">
             <h2 class="section-title">📦 打包规范（为开发者）</h2>
             <p>要发布自己的包到 fpm 仓库，需遵循 <code>.fpm</code> 包格式：</p>
@@ -651,6 +681,7 @@ CS_Console</pre></div>
 }</pre></div>
             <div class="note">发布渠道：发布到liuqingyuff@outlook.com邮箱上</div>
         </section>
+        
         <section id="repository" class="content-section">
             <h2 class="section-title">🗄️ 仓库配置与镜像</h2>
             <p>官方默认源：<code>https://mars-feifei.github.io/feitools.github.io/feisharp</code>。企业可搭建私有源，支持 HTTP/HTTPS 或本地文件系统。</p>
@@ -659,15 +690,18 @@ CS_Console</pre></div>
 fpm source local   # 切换到官方默认源</pre>
             </div>
         </section>
+        
         <footer>
             © 2026 FeiFei — fpm 包管理器文档 | 版本 2.0.0 | 问题反馈: liuqingyuff@outlook.com
         </footer>
     </main>
     
     <script>
+        
         document.addEventListener('DOMContentLoaded', function() {
             const navItems = document.querySelectorAll('.nav-item a');
             const sections = document.querySelectorAll('.content-section');
+            
             navItems.forEach(item => {
                 item.addEventListener('click', function(e) {
                     if(this.getAttribute('href') === '#') return;
@@ -681,6 +715,7 @@ fpm source local   # 切换到官方默认源</pre>
                     }
                 });
             });
+            
             window.addEventListener('scroll', function() {
                 let current = '';
                 sections.forEach(section => {
