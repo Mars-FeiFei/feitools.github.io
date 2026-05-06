@@ -1,0 +1,31 @@
+FeiSharp Privacy Policy
+
+Effective Date: Feb 12, 2026
+
+About FeiSharp: FeiSharp is an open-source programming language and associated tooling, released under the Apache 2.0 license.
+
+1. No Automatic Data Collection
+FeiSharp itself (including its compiler, runtime, and standard libraries) does not automatically collect, transmit, or store any personal data, usage statistics, crash reports, or telemetry. There are no "phone-home" features.
+
+2. Local Data Files
+FeiSharp may create data files (such as configuration files, caches, logs, or state information) in your operating system's standard user data directory (e.g., %AppData%\FeiSharpImportFiles on Windows).
+
+These files are created locally on your machine only and remain under your control. FeiSharp does not automatically upload, sync, or transmit these files or their contents to any server or third party. You may delete these files at any time without affecting the ability to reinstall or reuse FeiSharp, though doing so may reset user preferences or cached data.
+
+3. Source Code and Builds
+When you compile or run a FeiSharp program, all operations occur locally on your machine. FeiSharp has no cloud component, build server, or analytics backend that receives data from your system.
+
+4. Third-Party Services
+FeiSharp does not integrate any third-party analytics, error tracking, or advertising SDKs. If you choose to host FeiSharp source code or binaries on platforms like GitHub, those platforms have their own privacy policies, which are independent of this policy.
+
+5. Apache 2.0 License Note
+Your use of FeiSharp is governed by the Apache 2.0 license. This privacy policy is provided for clarity; the license's terms regarding "no warranty" and "as-is" distribution remain in full effect. No data rights are claimed by the project maintainers over your local data files.
+
+6. Developer Responsibility
+If you create and distribute applications using FeiSharp, you are solely responsible for complying with privacy laws regarding any data your application may collect. This policy only covers FeiSharp itself, not the software you write with it.
+
+7. Changes to This Policy
+Because FeiSharp does not send data over the network, material changes to this policy will be rare. Any updates will be clearly noted in the project repository (e.g., GitHub). Continued use of FeiSharp after changes constitutes acceptance of the revised policy.
+
+8. Contact
+For questions about this privacy policy, please open an issue in the official FeiSharp repository or contact the project maintainers via the channels listed there.

@@ -562,7 +562,7 @@
                         <span class="info-value">EXE + 环境</span>
                     </div>
                 </div>
-                <a href="feisharp_target_sdk_10_release_win-x64.exe" class="download-button">
+                <a href="FeiSharp_Target_SDK_v10.0_Release_Installer_Win-X64_Win10_Above_Installer.exe" class="download-button">
                     <i class="fas fa-file-archive button-icon"></i>
                     下载安装包
                 </a>
@@ -701,9 +701,16 @@
                     FeiSharp 10.0 完整安装包包含独立可执行文件，安装即可运行。VS Code 插件需要 Visual Studio Code 1.60.0 或更高版本。
                 </p>
             </div>
+        <br/>
+            <div class="note" style="background-color: #e7f4ff; padding: 15px; border-radius: 6px; border-left: 4px solid var(--primary-color);">
+                <p style="color: var(--primary-color); font-weight: 500; margin-bottom: 5px;">
+                    <i class="fas fa-info-circle"></i> 功能说明
+                </p>
+                <p style="color: #666; font-size: 14px;">
+                    为了确保FeiSharp功能正常运转，请先启动一次 FeiSharp Terminal , 等待输出测试报告时退出。
+                </p>
+            </div>
         </div>
-        
-        
         <div class="installation-guide">
             <h2 class="section-title">安装指南</h2>
             <ol class="steps-list">
@@ -718,6 +725,15 @@
                      # CommandPrompt
  feisharp_target_sdk_10_release_win-x64.exe
 # Powershell .\feisharp_target_sdk_10_release_win-x64.exe
+</div>
+                </li>
+                <li class="step-item">
+                    <h4 class="step-title">配置环境变量</h4>
+                    <p class="step-description">配置FeiSharp目录的环境变量</p>
+                    <div class="step-code">
+                     # CommandPrompt
+ setx PATH "%PATH%;C:\Program Files\FeiSharpSDK10"
+# Powershell [Environment]::SetEnvironmentVariable("Path", "$([Environment]::GetEnvironmentVariable('Path','User'));C:\Program Files\FeiSharpSDK10", "User")
 </div>
                 </li>
                 <li class="step-item">
@@ -743,11 +759,8 @@ feisharp hello.fsc</div>
         
         <div class="footer">
             <div class="footer-links">
-                <a href="#">许可证</a>
-                <a href="#">隐私政策</a>
-                <a href="#">使用条款</a>
-                <a href="#">支持</a>
-                <a href="#">贡献指南</a>
+                <a href="https://www.apache.org/licenses/LICENSE-2.0.txt">许可证</a>
+                <a href="./privacy_policy.txt">隐私条款</a>
             </div>
             <p>© 2026 FeiSharp 项目。保留所有权利。</p>
             <p style="font-size: 12px; color: #999; margin-top: 10px;">
@@ -757,24 +770,17 @@ feisharp hello.fsc</div>
     </div>
     
     <script>
-        // 添加简单的交互效果
         document.addEventListener('DOMContentLoaded', function() {
-            // 下载按钮点击动画
             const downloadButtons = document.querySelectorAll('.download-button');
             downloadButtons.forEach(button => {
                 button.addEventListener('click', function(e) {
-                    // 添加点击反馈
                     this.style.transform = 'scale(0.95)';
                     setTimeout(() => {
                         this.style.transform = '';
                     }, 200);
-                    
-                    // 记录下载统计（这里可以添加实际的统计代码）
                     console.log(`下载: ${this.getAttribute('href')}`);
                 });
             });
-            
-            // 卡片悬停效果增强
             const cards = document.querySelectorAll('.download-card');
             cards.forEach(card => {
                 card.addEventListener('mouseenter', function() {
@@ -784,8 +790,6 @@ feisharp hello.fsc</div>
                     this.style.zIndex = '';
                 });
             });
-            
-            // 其他下载选项悬停效果
             const otherDownloads = document.querySelectorAll('.requirements-section a');
             otherDownloads.forEach(link => {
                 link.addEventListener('mouseenter', function() {

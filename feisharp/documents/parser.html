@@ -285,9 +285,6 @@
             <div class="nav-title">核心语法</div>
             <ul class="nav-list">
                 <li class="nav-item"><a href="#keywords">关键字语法</a></li>
-                <li class="nav-item"><a href="#variables">变量操作</a></li>
-                <li class="nav-item"><a href="#functions">函数定义</a></li>
-                <li class="nav-item"><a href="#control-flow">控制流</a></li>
             </ul>
         </div>
         
@@ -372,7 +369,7 @@ _variables.NewAdd("null", null);
 _variables.NewAdd("pi", Math.PI);
 _variables.NewAdd("e", Math.E);
 _variables.NewAdd("tau", Math.Tau);
-_variables.NewAdd("buildVersion", "8.0");</pre>
+_variables.NewAdd("buildVersion", 10.0);</pre>
             </div>
         </section>
         
@@ -444,13 +441,13 @@ iend;
 while(count > 0)
 wbegin:
     print(count);
-    set("count", count - 1);
+    set count = count - 1;
 wend;
 
 // 函数定义;
 function add(a, b)
 fbegin:
-    _return a + b;
+    return a + b;
 fend;
 
 // 函数调用;
@@ -724,9 +721,9 @@ gethtml("https://example.com", "htmlContent");</pre>
             <h3 class="subsection-title">示例 1: 读取文件内容</h3>
             <div class="code-block">
                 <pre>
-                    import "FeiSharp.IO";
-                    read("fileContent", "data.txt");
-                    print(fileContent);
+import "FeiSharp.IO";
+read("fileContent" as "data.txt");
+print(fileContent);
                 </pre>
             </div>
         </section>

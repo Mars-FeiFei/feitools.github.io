@@ -332,7 +332,7 @@
         <div class="header">
             <h1>FeiSharp Lexer 文档</h1>
             <div class="breadcrumb">
-                <a href="#">FeiSharp</a> <span>›</span>
+                <a href="../index.html">FeiSharp</a> <span>›</span>
                 <a href="#">语言参考</a> <span>›</span>
                 <span>Lexer 类</span>
             </div>
@@ -539,19 +539,9 @@ public class Token
                             <td>右圆括号</td>
                         </tr>
                         <tr>
-                            <td><code>{</code></td>
-                            <td><code>"{"</code></td>
-                            <td>左花括号，代码块开始</td>
-                        </tr>
-                        <tr>
-                            <td><code>}</code></td>
-                            <td><code>"}"</code></td>
-                            <td>右花括号，代码块结束</td>
-                        </tr>
-                        <tr>
                             <td><code>[</code></td>
                             <td><code>"["</code></td>
-                            <td>左方括号，数组索引</td>
+                            <td>左方括号</td>
                         </tr>
                         <tr>
                             <td><code>]</code></td>
@@ -656,10 +646,6 @@ public class Token
                     </tr>
                 </tbody>
             </table>
-            
-            <div class="warning">
-                <strong>注意：</strong> 当前版本的 Lexer 只识别单字符运算符，复合运算符（如 ==、!=、&&、||）需要在 Parser 阶段处理。
-            </div>
         </section>
         
         
@@ -673,7 +659,7 @@ public class Token
 if (current == '"')
 {
     int start = ++_index;
-    while (_index < _source.Length && _source[_index] != '"')
+    while (_index &lt; _source.Length && _source[_index] != '"')
     {
         _index++;
     }
@@ -695,7 +681,7 @@ if (current == '"')
 if (char.IsDigit(current))
 {
     int start = _index;
-    while (_index < _source.Length && 
+    while (_index &lt; _source.Length && 
            (char.IsDigit(_source[_index]) || _source[_index] == '.')) 
         _index++;
     return new Token(TokenTypes.Number, _source[start.._index]);
@@ -722,7 +708,7 @@ if (char.IsDigit(current))
 if (char.IsLetter(current))
 {
     int start = _index;
-    while (_index < _source.Length && char.IsLetterOrDigit(_source[_index]))
+    while (_index &lt; _source.Length && char.IsLetterOrDigit(_source[_index]))
         _index++;
     string identifier = _source[start.._index];
     if (FeiSharpKeywords.KeywordMap.TryGetValue(identifier, out Token keywordToken))
@@ -793,7 +779,7 @@ _private     // → Token(TokenTypes.Identifier, "_private")</pre>
             <div class="code-block">
                 <pre>public Token NextToken()
 {
-    while (_index < _source.Length)
+    while (_index &lt; _source.Length)
     {
         char current = _source[_index];
         
@@ -952,7 +938,7 @@ print(message);
                 <pre>输入源代码:
 function add(a, b)
 fbegin:
-    _return a + b;
+    return a + b;
 fend;
 
 解析结果:
@@ -965,7 +951,7 @@ fend;
 7. Token(Punctuation, ")")
 8. Token(Identifier, "fbegin")
 9. Token(Punctuation, ":")
-10. Token(Identifier, "_return")
+10. Token(Keyword, "return")
 11. Token(Identifier, "a")
 12. Token(Operator, "+")
 13. Token(Identifier, "b")
