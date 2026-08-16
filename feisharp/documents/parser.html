@@ -528,8 +528,8 @@
                         <td>导入命名空间</td>
                     </tr>
                     <tr>
-                        <td><code>readonlyclass</code></td>
-                        <td><code>readonlyclass Name { ... }</code></td>
+                        <td><code>class</code></td>
+                        <td><code>class Name { ... }</code></td>
                         <td>定义只读类</td>
                     </tr>
                 </tbody>
@@ -701,7 +701,7 @@ print(<span class="number">2</span> <span class="keyword">as</span> string);    
             <div class="example">
                 <div class="example-title">示例：类的定义与继承</div>
                 <pre><span class="comment">// 基类</span>
-<span class="keyword">readonlyclass</span> Animal {
+<span class="keyword">class</span> Animal {
     <span class="keyword">public var</span> name = <span class="string">""</span>;
     <span class="keyword">public var</span> age = <span class="number">0</span>;
     
@@ -711,7 +711,7 @@ print(<span class="number">2</span> <span class="keyword">as</span> string);    
 }
 
 <span class="comment">// 子类 (继承)</span>
-<span class="keyword">readonlyclass</span> Dog : Animal {
+<span class="keyword">class</span> Dog : Animal {
     <span class="keyword">public var</span> breed = <span class="string">"Unknown"</span>;
     
     <span class="keyword">public function</span> <span class="function">speak</span>() {
@@ -1262,13 +1262,13 @@ print(str);        <span class="comment">// "3.14"</span></pre>
             
             <h3 class="subsection-title">示例 4: 类与继承</h3>
             <div class="code-block">
-                <pre><span class="keyword">readonlyclass</span> Shape {
+                <pre><span class="keyword">class</span> Shape {
     <span class="keyword">public function</span> <span class="function">area</span>() {
         <span class="keyword">return</span> <span class="number">0</span>;
     }
 }
 
-<span class="keyword">readonlyclass</span> Circle : Shape {
+<span class="keyword">class</span> Circle : Shape {
     <span class="keyword">public var</span> radius = <span class="number">0</span>;
     
     <span class="keyword">public function</span> <span class="function">area</span>() {
