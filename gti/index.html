@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DF_GTI_PAGE</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      background: #fff;
+      font-family: "Microsoft YaHei", system-ui, sans-serif;
+    }
+
+    .carousel {
+      position: relative;
+      width: 100vw;
+      max-width: none;
+      overflow: hidden;
+      border-radius: 0;
+      background: #fff;
+      box-shadow: none;
+      touch-action: pan-y;
+    }
+
+    .carousel-track {
+      display: flex;
+      will-change: transform;
+    }
+
+    .carousel-slide {
+      flex: 0 0 100%;
+      margin: 0;
+      aspect-ratio: 814 / 218;
+      overflow: hidden;
+    }
+
+    .carousel-slide img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    .carousel-dots {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      z-index: 2;
+      display: flex;
+      gap: 8px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.25);
+      transform: translateX(-50%);
+    }
+
+    .carousel-dot {
+      width: 9px;
+      height: 9px;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.55);
+      cursor: pointer;
+      transition: width 0.25s, border-radius 0.25s, background 0.25s;
+    }
+
+    .carousel-dot.active {
+      width: 24px;
+      border-radius: 5px;
+      background: #fff;
+    }
+
+    @media (max-width: 600px) {
+      .carousel {
+        border-radius: 0;
+      }
+      .carousel-dots { bottom: 7px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .carousel-track,
+      .carousel-dot {
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="carousel" aria-label="首页图片轮播" tabindex="0">
+    <div class="carousel-track">
+      <figure class="carousel-slide"><img src="bee_doctor-white.png" alt="轮播图片 1"></figure>
+      <figure class="carousel-slide"><img src="bit-white.png" alt="轮播图片 2"></figure>
+      <figure class="carousel-slide"><img src="d_wolf-white.png" alt="轮播图片 3"></figure>
+      <figure class="carousel-slide"><img src="lao_bei_zha-white.png" alt="轮播图片 4"></figure>
+      <figure class="carousel-slide"><img src="no_name-white.png" alt="轮播图片 5"></figure>
+    </div>
+
+    <div class="carousel-dots" aria-label="选择图片"></div>
+  </section>
+
+  <script>
+    const carousel = document.querySelector('.carousel');
+    const track = carousel.querySelector('.carousel-track');
+    const originalSlides = [...track.children];
+    const dotsBox = carousel.querySelector('.carousel-dots');
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const interval = 3500;
+
+    // 在首尾加入副本，让最后一张和第一张之间也能连续横向滚动。
+    track.prepend(originalSlides.at(-1).cloneNode(true));
+    track.append(originalSlides[0].cloneNode(true));
+
+    let index = 1;
+    let timer;
+    let startX = 0;
+    let deltaX = 0;
+    let dragging = false;
+    let animating = false;
+
+    originalSlides.forEach((_, dotIndex) => {
+      const dot = document.createElement('button');
+      dot.type = 'button';
+      dot.className = 'carousel-dot';
+      dot.setAttribute('aria-label', `显示第 ${dotIndex + 1} 张图片`);
+      dot.addEventListener('click', () => goTo(dotIndex + 1));
+      dotsBox.append(dot);
+    });
+
+    const dots = [...dotsBox.children];
+
+    function realIndex() {
+      return (index - 1 + originalSlides.length) % originalSlides.length;
+    }
+
+    function updateDots() {
+      dots.forEach((dot, i) => {
+        const active = i === realIndex();
+        dot.classList.toggle('active', active);
+        dot.setAttribute('aria-current', active ? 'true' : 'false');
+      });
+    }
+
+    function move(animated = true, offset = 0) {
+      track.style.transition = animated && !reduceMotion ? 'transform 0.55s ease' : 'none';
+      track.style.transform = `translateX(calc(${-index * 100}% + ${offset}px))`;
+      updateDots();
+    }
+
+    function goTo(newIndex) {
+      if (animating) return;
+
+      if (newIndex === index) {
+        restartAutoPlay();
+        return;
+      }
+
+      if (reduceMotion) {
+        index = ((newIndex - 1 + originalSlides.length) % originalSlides.length) + 1;
+        move(false);
+        return;
+      }
+
+      index = newIndex;
+      animating = true;
+      move(true);
+      restartAutoPlay();
+    }
+
+    function next() { goTo(index + 1); }
+    function prev() { goTo(index - 1); }
+
+    function startAutoPlay() {
+      if (reduceMotion) return;
+      clearInterval(timer);
+      timer = setInterval(next, interval);
+    }
+
+    function restartAutoPlay() {
+      clearInterval(timer);
+      startAutoPlay();
+    }
+
+    track.addEventListener('transitionend', () => {
+      if (index === originalSlides.length + 1) {
+        index = 1;
+        move(false);
+      } else if (index === 0) {
+        index = originalSlides.length;
+        move(false);
+      }
+      animating = false;
+    });
+
+    carousel.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') prev();
+      if (event.key === 'ArrowRight') next();
+    });
+
+    carousel.addEventListener('pointerdown', (event) => {
+      if (event.target.closest('button') || animating) return;
+      clearInterval(timer);
+      dragging = true;
+      startX = event.clientX;
+      deltaX = 0;
+      carousel.setPointerCapture(event.pointerId);
+    });
+
+    carousel.addEventListener('pointermove', (event) => {
+      if (!dragging) return;
+      deltaX = event.clientX - startX;
+      move(false, deltaX);
+    });
+
+    carousel.addEventListener('pointerup', (event) => {
+      if (!dragging) return;
+      dragging = false;
+      carousel.releasePointerCapture(event.pointerId);
+      if (Math.abs(deltaX) > carousel.clientWidth * 0.12) {
+        deltaX < 0 ? next() : prev();
+      } else {
+        move(true);
+        startAutoPlay();
+      }
+    });
+
+    move(false);
+    startAutoPlay();
+
+    // 后台提前解码图片，但不阻塞第一张图的 3.5 秒自动播放计时。
+    originalSlides.forEach((slide) => {
+      const image = slide.querySelector('img');
+      if (typeof image.decode === 'function') image.decode().catch(() => {});
+    });
+  </script>
+</body>
+</html>
